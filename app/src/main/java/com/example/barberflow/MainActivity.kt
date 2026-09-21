@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         val inputCliente = findViewById<EditText>(R.id.et_cliente)
         val inputBarbero = findViewById<Spinner>(R.id.spinner_barbero)
         val inputServicio = findViewById<Spinner>(R.id.spinner_servicio)
+        val botonCitas = findViewById<Button>(R.id.btn_ver_historial)
 
         val listaBarberos = listOf("Alejandro (ID: 1)", "María (ID: 2)", "Carlos (ID:3)")
         val listaServicios = listOf("Corte básico (ID: 1)", "Arreglo de barba (ID: 2)", "Tinte (ID: 3)")
@@ -88,15 +89,12 @@ class MainActivity : AppCompatActivity() {
 
         // 3. Le decimos al botón qué hacer al pulsarlo
         boton.setOnClickListener {
-            titulo.text = "Conectando..."
 
             val textoCliente = inputCliente.text.toString()
 
             if (textoCliente.isEmpty() || fechaSeleccionadaParaBackend.isEmpty()) {
-                titulo.text = "¡Error! Rellena el cliente y elige fecha"
+                android.widget.Toast.makeText(this, "¡Error! Rellena el cliente y elige fecha", android.widget.Toast.LENGTH_SHORT).show()
             } else {
-                titulo.text = "Conectando..."
-
                 val numeroCliente = textoCliente.toInt()
 
                 val posicionBarbero = inputBarbero.selectedItemPosition
@@ -118,22 +116,27 @@ class MainActivity : AppCompatActivity() {
                         response: retrofit2.Response<Cita>
                     ) {
                         if (response.isSuccessful) {
-                            titulo.text = "¡Cita creada en FastAPI!"
+                            android.widget.Toast.makeText(this@MainActivity, "¡Cita creada en FastAPI!", android.widget.Toast.LENGTH_SHORT).show()
                             inputCliente.text.clear()
                             //inputBarbero.text.clear()
                             //inputServicio.text.clear()
                             textoFechaYHora.text = "Seleccionar Fecha y Hora"
                             fechaSeleccionadaParaBackend = ""
                         } else {
-                            titulo.text = "Error del servidor: ${response.code()}"
+                            android.widget.Toast.makeText(this@MainActivity, "¡Error del servidor: ${response.code()}", android.widget.Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: retrofit2.Call<Cita>, t: Throwable) {
-                        titulo.text = "Fallo: ${t.message}"
+                        android.widget.Toast.makeText(this@MainActivity, "Fallo: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
                     }
                 })
             }
+        }
+
+        botonCitas.setOnClickListener {
+            val intent = android.content.Intent(this, HistorialActivity::class.java)
+            startActivity(intent)
         }
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
