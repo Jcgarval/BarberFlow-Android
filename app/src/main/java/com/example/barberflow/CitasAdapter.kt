@@ -24,7 +24,20 @@ package com.example.barberflow
 
             holder.textoServicio.text = "Servicio ID: " + citaActual.servicio_id.toString()
             holder.textoBarbero.text = "Barbero ID: " + citaActual.barbero_id.toString()
-            holder.textoFecha.text = citaActual.fecha_hora
+
+            try {
+                val fechaSinMilisegundos = citaActual.fecha_hora.substringBefore(".")
+                val formatoEntrada = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault())
+                val formatoSalida = java.text.SimpleDateFormat("dd/MM/yyyy HH:mm", java.util.Locale.getDefault())
+                val fechaParseada = formatoEntrada.parse(fechaSinMilisegundos)
+                if (fechaParseada != null) {
+                    holder.textoFecha.text = formatoSalida.format(fechaParseada)
+                } else {
+                    holder.textoFecha.text = citaActual.fecha_hora
+            }
+        } catch (e: Exception) {
+                holder.textoFecha.text = citaActual.fecha_hora
+        }
         }
 
         override fun getItemCount(): Int {
