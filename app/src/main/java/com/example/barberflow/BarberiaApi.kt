@@ -13,4 +13,10 @@ interface BarberiaApi {
     @GET("/citas")
     suspend fun obtenerCitas(): List<Cita>
 
+
+    @GET("/barberos")
+    suspend fun obtenerBarberos(): List<Barbero>
+
+    @GET("/servicios")
+    suspend fun obtenerServicios(): List<Servicio>
 }

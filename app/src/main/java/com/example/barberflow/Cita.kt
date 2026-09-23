@@ -3,6 +3,9 @@ package com.example.barberflow
 data class BarberoInfo(val nombre: String)
 data class ServicioInfo(val nombre: String)
 
+data class Barbero(val id: Int, val nombre: String)
+data class Servicio(val id: Int, val nombre: String)
+
 data class Cita(
     var cliente_id: Int,
     var barbero_id: Int,
