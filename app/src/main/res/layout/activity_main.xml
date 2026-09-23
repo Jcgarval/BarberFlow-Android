@@ -1,71 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center_vertical"
+    android:background="#FAFAFA">
 
+    <!-- Título Principal -->
     <TextView
         android:id="@+id/tv_titulo"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BarberFlow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Reserva tu Cita"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"/>
 
-    <Button
-        android:id="@+id/btn_reservar"
-        android:layout_width="wrap_content"
+    <!-- Etiqueta y Caja para el Cliente -->
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reservar Cita"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_titulo" />
+        android:text="Tu número de cliente:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:layout_marginBottom="8dp"/>
 
     <EditText
         android:id="@+id/et_cliente"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/tv_titulo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:padding="12dp"
+        android:layout_marginBottom="24dp"/>
 
+    <!-- Etiqueta y Desplegable para el Servicio -->
     <TextView
-        android:id="@+id/tv_FechaYHora"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Seleccionar Fecha y Hora"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_reservar" />
-
-    <Spinner
-        android:id="@+id/spinner_barbero"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/et_cliente"
-        tools:layout_editor_absoluteX="1dp" />
+        android:text="¿Qué te vas a hacer?"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:layout_marginBottom="8dp"/>
 
     <Spinner
         android:id="@+id/spinner_servicio"
-        android:layout_width="409dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Etiqueta y Desplegable para el Barbero -->
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/spinner_barbero"
-        tools:layout_editor_absoluteX="1dp" />
+        android:text="Elige a tu barbero:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:layout_marginBottom="8dp"/>
+
+    <Spinner
+        android:id="@+id/spinner_barbero"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Etiqueta y Botón para la Fecha y Hora -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¿Cuándo quieres venir?"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#555555"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tv_FechaYHora"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Seleccionar Fecha y Hora"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:background="#E0E0E0"
+        android:textColor="#333333"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Botón Principal de Reserva -->
+    <Button
+        android:id="@+id/btn_reservar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Confirmar Reserva"
+        android:textSize="18sp"
+        android:backgroundTint="#6750A4"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Separador y Botón del Historial -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/btn_ver_historial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:text="Ver mis citas"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_FechaYHora" />
+        android:backgroundTint="#8E8E93"
+        android:textColor="#FFFFFF" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

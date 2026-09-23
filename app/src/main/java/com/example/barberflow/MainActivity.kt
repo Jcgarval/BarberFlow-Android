@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         // 1. Enlazamos la interfaz
         val boton = findViewById<Button>(R.id.btn_reservar)
-        val titulo = findViewById<TextView>(R.id.tv_titulo)
         val inputCliente = findViewById<EditText>(R.id.et_cliente)
         val inputBarbero = findViewById<Spinner>(R.id.spinner_barbero)
         val inputServicio = findViewById<Spinner>(R.id.spinner_servicio)
