@@ -21,7 +21,7 @@ class HistorialActivity : AppCompatActivity() {
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
 
         val retrofit = retrofit2.Retrofit.Builder()
-            .baseUrl("http://192.168.1.30:8000")
+            .baseUrl("http://192.168.1.23:8000")
             .addConverterFactory(retrofit2.converter.gson.GsonConverterFactory.create())
             .build()
 

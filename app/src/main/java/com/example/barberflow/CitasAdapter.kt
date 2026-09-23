@@ -22,8 +22,8 @@ package com.example.barberflow
         override fun onBindViewHolder(holder: CitaViewHolder, position: Int) {
             val citaActual = listaCitas[position]
 
-            holder.textoServicio.text = "Servicio ID: " + citaActual.servicio_id.toString()
-            holder.textoBarbero.text = "Barbero ID: " + citaActual.barbero_id.toString()
+            holder.textoServicio.text = "Servicio: " + citaActual.servicio.nombre
+            holder.textoBarbero.text = "Barbero: " + citaActual.barbero.nombre
 
             try {
                 val fechaSinMilisegundos = citaActual.fecha_hora.substringBefore(".")
