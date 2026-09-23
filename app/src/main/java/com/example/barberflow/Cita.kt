@@ -7,6 +7,7 @@ data class Barbero(val id: Int, val nombre: String)
 data class Servicio(val id: Int, val nombre: String)
 
 data class Cita(
+    val id: Int = 0,
     var cliente_id: Int,
     var barbero_id: Int,
     var servicio_id: Int,
@@ -14,3 +15,6 @@ data class Cita(
     var barbero: BarberoInfo = BarberoInfo(""),
     var servicio: ServicioInfo = ServicioInfo("")
 )
+
+data class ClienteCreate(val nombre: String, val telefono: String)
+data class ClienteResponse(val id: Int, val nombre: String, val telefono: String)

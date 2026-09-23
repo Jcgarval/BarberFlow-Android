@@ -21,25 +21,6 @@
         android:gravity="center"
         android:layout_marginBottom="32dp"/>
 
-    <!-- Etiqueta y Caja para el Cliente -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tu número de cliente:"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#555555"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
-        android:id="@+id/et_cliente"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#FFFFFF"
-        android:inputType="number"
-        android:padding="12dp"
-        android:layout_marginBottom="24dp"/>
-
     <!-- Etiqueta y Desplegable para el Servicio -->
     <TextView
         android:layout_width="match_parent"
