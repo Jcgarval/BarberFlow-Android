@@ -17,29 +17,30 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="¡Bienvenido a BarberFlow!"
+        android:text="Inicia sesión"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#333333"
         android:gravity="center"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="¿Cómo te llamas?"
-        android:textSize="16sp"
-        android:textColor="#555555"
-        android:gravity="center"
         android:layout_marginBottom="24dp"/>
 
     <EditText
-        android:id="@+id/et_nombre_cliente"
+        android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#FFFFFF"
-        android:hint="Ej. José Carlos"
-        android:inputType="textPersonName"
+        android:hint="Correo electrónico"
+        android:inputType="textEmailAddress"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#FFFFFF"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
         android:padding="12dp"
         android:layout_marginBottom="32dp"/>
 

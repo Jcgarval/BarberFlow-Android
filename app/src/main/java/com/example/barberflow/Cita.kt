@@ -18,3 +18,16 @@ data class Cita(
 
 data class ClienteCreate(val nombre: String, val telefono: String)
 data class ClienteResponse(val id: Int, val nombre: String, val telefono: String)
+
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val access_token: String,
+    val token_type: String,
+    val rol: String,
+    val id: Int,
+    val nombre: String
+)

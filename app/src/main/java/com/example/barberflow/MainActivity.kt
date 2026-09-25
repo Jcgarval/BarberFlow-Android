@@ -72,30 +72,47 @@ class MainActivity : AppCompatActivity() {
         var fechaSeleccionadaParaBackend = ""
 
         textoFechaYHora.setOnClickListener {
-            val calendario = java.util.Calendar.getInstance()
+            val calendarioActual = java.util.Calendar.getInstance()
+
             val selectorFecha = android.app.DatePickerDialog(this, { _, añoElegido, mesElegido, diaElegido ->
 
-                // Formateamos los números para que siempre tengan dos cifras (ej. "09" en vez de "9")
+                // Comprobamos qué día de la semana ha elegido
+                val fechaComprobacion = java.util.Calendar.getInstance()
+                fechaComprobacion.set(añoElegido, mesElegido, diaElegido)
+
+                // Si es domingo (DAY_OF_WEEK = 1), cortamos el proceso y avisamos
+                if (fechaComprobacion.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.SUNDAY) {
+                    android.widget.Toast.makeText(this, "Cerramos los domingos. Por favor, elige otro día.", android.widget.Toast.LENGTH_LONG).show()
+                    return@DatePickerDialog // Salimos del selector de fecha sin abrir la hora
+                }
+
                 val mesFormateado = String.format("%02d", mesElegido + 1)
                 val diaFormateado = String.format("%02d", diaElegido)
                 val fechaParcial = "$añoElegido-$mesFormateado-$diaFormateado"
 
                 val selectorHora = android.app.TimePickerDialog(this, { _, horaElegida, minutoElegido ->
 
+                    // Comprobamos el horario comercial (ej. de 09:00 a 19:59)
+                    if (horaElegida < 9 || horaElegida >= 20) {
+                        android.widget.Toast.makeText(this, "Horario válido: de 09:00 a 20:00", android.widget.Toast.LENGTH_LONG).show()
+                        return@TimePickerDialog
+                    }
+
                     val horaFormateada = String.format("%02d", horaElegida)
                     val minutoFormateado = String.format("%02d", minutoElegido)
 
-                    // 1. Formato técnico oculto para FastAPI (con la "T" y los segundos)
                     fechaSeleccionadaParaBackend = "${fechaParcial}T${horaFormateada}:${minutoFormateado}:00"
-
-                    // 2. Formato visual amigable para el usuario
                     val fechaVisual = "$diaFormateado/$mesFormateado/$añoElegido a las $horaFormateada:$minutoFormateado"
                     textoFechaYHora.text = fechaVisual
 
-                }, calendario.get(java.util.Calendar.HOUR_OF_DAY), calendario.get(java.util.Calendar.MINUTE), true)
+                }, calendarioActual.get(java.util.Calendar.HOUR_OF_DAY), calendarioActual.get(java.util.Calendar.MINUTE), true)
 
                 selectorHora.show()
-            }, calendario.get(java.util.Calendar.YEAR), calendario.get(java.util.Calendar.MONTH), calendario.get(java.util.Calendar.DAY_OF_MONTH))
+
+            }, calendarioActual.get(java.util.Calendar.YEAR), calendarioActual.get(java.util.Calendar.MONTH), calendarioActual.get(java.util.Calendar.DAY_OF_MONTH))
+
+            // Bloqueamos las fechas pasadas. El usuario solo puede elegir desde hoy en adelante.
+            selectorFecha.datePicker.minDate = System.currentTimeMillis()
 
             selectorFecha.show()
         }
@@ -139,6 +156,21 @@ class MainActivity : AppCompatActivity() {
 
         botonCitas.setOnClickListener {
             startActivity(android.content.Intent(this, HistorialActivity::class.java))
+        }
+
+        // Configuración del botón Cerrar Sesión
+        val botonCerrarSesion = findViewById<Button>(R.id.btn_cerrar_sesion)
+        botonCerrarSesion.setOnClickListener {
+            // 1. Vaciamos las SharedPreferences
+            preferencias.edit().clear().apply()
+
+            // 2. Avisamos al usuario
+            Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
+
+            // 3. Lo devolvemos a la pantalla de Login y destruimos la actual
+            val intent = android.content.Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
