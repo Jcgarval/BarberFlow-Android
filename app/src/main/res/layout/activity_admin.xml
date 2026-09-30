@@ -109,6 +109,16 @@
             android:textColor="#FFFFFF"
             android:layout_marginBottom="32dp"/>
 
+        <Button
+            android:id="@+id/btn_ver_agenda"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Ver Agenda de Citas"
+            android:textSize="18sp"
+            android:backgroundTint="#4CAF50"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp" />
+
         <!-- CERRAR SESIÓN -->
         <Button
             android:id="@+id/btn_cerrar_sesion"

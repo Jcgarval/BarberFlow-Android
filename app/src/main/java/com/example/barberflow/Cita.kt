@@ -15,10 +15,6 @@ data class Cita(
     var barbero: BarberoInfo = BarberoInfo(""),
     var servicio: ServicioInfo = ServicioInfo("")
 )
-
-data class ClienteCreate(val nombre: String, val telefono: String)
-data class ClienteResponse(val id: Int, val nombre: String, val telefono: String)
-
 data class LoginRequest(
     val email: String,
     val password: String

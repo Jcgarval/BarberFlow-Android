@@ -79,6 +79,13 @@ class AdminActivity : AppCompatActivity() {
             }
         }
 
+        val btnVerAgenda = findViewById<Button>(R.id.btn_ver_agenda)
+
+        btnVerAgenda.setOnClickListener {
+            val intent = Intent(this, AdminCitasActivity::class.java)
+            startActivity(intent)
+        }
+
         // Acción: Cerrar Sesión
         btnCerrarSesion.setOnClickListener {
             // Borramos todos los datos de la sesión actual

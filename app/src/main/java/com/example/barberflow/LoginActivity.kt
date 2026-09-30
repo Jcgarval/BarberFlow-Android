@@ -72,6 +72,12 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, escribe tu correo y contraseña", Toast.LENGTH_SHORT).show()
             }
         }
+        val tvIrRegistro = findViewById<android.widget.TextView>(R.id.tv_ir_registro)
+
+        tvIrRegistro.setOnClickListener {
+            val intent = Intent(this, RegistroActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun redirigirSegunRol(rol: String) {

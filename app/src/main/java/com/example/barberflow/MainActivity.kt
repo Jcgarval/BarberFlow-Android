@@ -38,12 +38,8 @@ class MainActivity : AppCompatActivity() {
         // findViewById<TextView>(R.id.tv_titulo_reserva).text = "Reserva tu Cita, $nombreClienteGuardado"
 
         // 3. Configuramos Retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.23:8000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
-        val api = retrofit.create(BarberiaApi::class.java)
+        val api = RetrofitClient.getApi(this)
 
         var barberosReales: List<Barbero> = emptyList()
         var serviciosReales: List<Servicio> = emptyList()

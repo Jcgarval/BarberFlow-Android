@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
     // Pon aquí tu IP (si usas móvil físico) o 10.0.2.2 (si usas el emulador)
-    private const val BASE_URL = "http://192.168.1.23:8000/"
+    private const val BASE_URL = "http://192.168.1.20:8000/"
 
     fun getApi(context: Context): BarberiaApi {
         val client = OkHttpClient.Builder()
