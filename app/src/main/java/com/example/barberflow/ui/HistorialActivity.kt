@@ -1,6 +1,5 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -11,8 +10,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+
+// Importaciones de nuestro proyecto
+import com.example.barberflow.R
+import com.example.barberflow.adapters.CitasAdapter
+import com.example.barberflow.api.RetrofitClient
 
 class HistorialActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,18 +25,13 @@ class HistorialActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.rv_citas)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Configuración de Retrofit
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.20:8000/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val api = retrofit.create(BarberiaApi::class.java)
+        // ⚠️ SOLUCIÓN: Usamos el cliente centralizado para inyectar el Token automáticamente
+        val api = RetrofitClient.getApi(this)
 
         lifecycleScope.launch {
             try {
                 // 1. Leemos el ID del cliente registrado desde la "caja fuerte"
-                val preferencias = getSharedPreferences("BarberFlowPrefs", Context.MODE_PRIVATE)
+                val preferencias = getSharedPreferences("BarberFlowPrefs", MODE_PRIVATE)
                 val idClienteActual = preferencias.getInt("CLIENTE_ID", -1)
 
                 // 2. Si no hay ID, mostramos error y detenemos la descarga
@@ -56,12 +53,24 @@ class HistorialActivity : AppCompatActivity() {
                             if (respuesta.isSuccessful) {
                                 // Borramos la tarjeta visualmente sin recargar toda la pantalla
                                 (recyclerView.adapter as CitasAdapter).eliminarItem(posicionEnLista)
-                                Toast.makeText(this@HistorialActivity, "Cita cancelada", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@HistorialActivity,
+                                    "Cita cancelada",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
-                                Toast.makeText(this@HistorialActivity, "Error al cancelar", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@HistorialActivity,
+                                    "Error al cancelar",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         } catch (e: Exception) {
-                            Toast.makeText(this@HistorialActivity, "Fallo de conexión", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@HistorialActivity,
+                                "Fallo de conexión",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }

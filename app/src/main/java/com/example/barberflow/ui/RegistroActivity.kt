@@ -1,12 +1,18 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+
+// Importaciones de nuestro proyecto
+import com.example.barberflow.R
+import com.example.barberflow.api.RetrofitClient
+import com.example.barberflow.models.ClienteCreate
 
 class RegistroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +47,7 @@ class RegistroActivity : AppCompatActivity() {
                         finish()
                     } catch (e: Exception) {
                         // Esto imprimirá el error real en la pestaña Logcat de Android Studio
-                        android.util.Log.e("BarberFlowError", "Fallo exacto al registrar: ", e)
+                        Log.e("BarberFlowError", "Fallo exacto al registrar: ", e)
 
                         // Esto te lo mostrará en el móvil
                         Toast.makeText(this@RegistroActivity, "Error real: ${e.message}", Toast.LENGTH_LONG).show()

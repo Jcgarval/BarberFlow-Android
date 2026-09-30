@@ -1,9 +1,10 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.barberflow.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

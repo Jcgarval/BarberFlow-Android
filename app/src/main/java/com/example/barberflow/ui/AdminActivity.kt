@@ -1,6 +1,5 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,6 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+
+// Importaciones de nuestro proyecto
+import com.example.barberflow.R
+import com.example.barberflow.api.RetrofitClient
+import com.example.barberflow.models.BarberoCreate
+import com.example.barberflow.models.ServicioCreate
 
 class AdminActivity : AppCompatActivity() {
 
@@ -27,6 +32,7 @@ class AdminActivity : AppCompatActivity() {
         val btnGuardarServicio = findViewById<Button>(R.id.btn_guardar_servicio)
 
         val btnCerrarSesion = findViewById<Button>(R.id.btn_cerrar_sesion)
+        val btnVerAgenda = findViewById<Button>(R.id.btn_ver_agenda)
 
         // Instancia centralizada de Retrofit con el Token inyectado
         val api = RetrofitClient.getApi(this)
@@ -79,8 +85,7 @@ class AdminActivity : AppCompatActivity() {
             }
         }
 
-        val btnVerAgenda = findViewById<Button>(R.id.btn_ver_agenda)
-
+        // Acción: Ver Agenda
         btnVerAgenda.setOnClickListener {
             val intent = Intent(this, AdminCitasActivity::class.java)
             startActivity(intent)
@@ -89,7 +94,7 @@ class AdminActivity : AppCompatActivity() {
         // Acción: Cerrar Sesión
         btnCerrarSesion.setOnClickListener {
             // Borramos todos los datos de la sesión actual
-            val preferencias = getSharedPreferences("BarberFlowPrefs", Context.MODE_PRIVATE)
+            val preferencias = getSharedPreferences("BarberFlowPrefs", MODE_PRIVATE)
             preferencias.edit().clear().apply()
 
             Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()

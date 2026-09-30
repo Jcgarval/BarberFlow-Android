@@ -1,4 +1,4 @@
-package com.example.barberflow
+package com.example.barberflow.models
 
 data class BarberoInfo(val nombre: String)
 data class ServicioInfo(val nombre: String)

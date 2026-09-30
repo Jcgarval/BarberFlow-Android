@@ -15,7 +15,7 @@
         android:theme="@style/Theme.BarberFlow"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,24 +24,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".HistorialActivity"
+            android:name=".ui.HistorialActivity"
             android:exported="false" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".ui.AdminActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".RegistroActivity"
+            android:name=".ui.RegistroActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".AdminCitasActivity"
+            android:name=".ui.AdminCitasActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
     </application>

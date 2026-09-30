@@ -1,23 +1,24 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.barberflow.R
+import com.example.barberflow.api.RetrofitClient
+import com.example.barberflow.models.LoginRequest
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // 1. Comprobamos la caja fuerte, pero ahora buscamos el TOKEN de seguridad
-        val preferencias = getSharedPreferences("BarberFlowPrefs", Context.MODE_PRIVATE)
+        val preferencias = getSharedPreferences("BarberFlowPrefs", MODE_PRIVATE)
         val tokenGuardado = preferencias.getString("TOKEN", null)
         val rolGuardado = preferencias.getString("ROL", "cliente")
 
@@ -72,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, escribe tu correo y contraseña", Toast.LENGTH_SHORT).show()
             }
         }
-        val tvIrRegistro = findViewById<android.widget.TextView>(R.id.tv_ir_registro)
+        val tvIrRegistro = findViewById<TextView>(R.id.tv_ir_registro)
 
         tvIrRegistro.setOnClickListener {
             val intent = Intent(this, RegistroActivity::class.java)

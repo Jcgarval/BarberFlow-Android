@@ -1,6 +1,8 @@
-package com.example.barberflow
+package com.example.barberflow.ui
 
-import android.content.Context
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -12,9 +14,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.barberflow.R
+import com.example.barberflow.api.RetrofitClient
+import com.example.barberflow.models.Barbero
+import com.example.barberflow.models.Cita
+import com.example.barberflow.models.Servicio
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // 1. Recuperamos los datos del cliente desde la memoria interna
-        val preferencias = getSharedPreferences("BarberFlowPrefs", Context.MODE_PRIVATE)
+        val preferencias = getSharedPreferences("BarberFlowPrefs", MODE_PRIVATE)
         val idClienteGuardado = preferencias.getInt("CLIENTE_ID", -1)
         val nombreClienteGuardado = preferencias.getString("CLIENTE_NOMBRE", "Cliente")
 
@@ -68,17 +77,17 @@ class MainActivity : AppCompatActivity() {
         var fechaSeleccionadaParaBackend = ""
 
         textoFechaYHora.setOnClickListener {
-            val calendarioActual = java.util.Calendar.getInstance()
+            val calendarioActual = Calendar.getInstance()
 
-            val selectorFecha = android.app.DatePickerDialog(this, { _, añoElegido, mesElegido, diaElegido ->
+            val selectorFecha = DatePickerDialog(this, { _, añoElegido, mesElegido, diaElegido ->
 
                 // Comprobamos qué día de la semana ha elegido
-                val fechaComprobacion = java.util.Calendar.getInstance()
+                val fechaComprobacion = Calendar.getInstance()
                 fechaComprobacion.set(añoElegido, mesElegido, diaElegido)
 
                 // Si es domingo (DAY_OF_WEEK = 1), cortamos el proceso y avisamos
-                if (fechaComprobacion.get(java.util.Calendar.DAY_OF_WEEK) == java.util.Calendar.SUNDAY) {
-                    android.widget.Toast.makeText(this, "Cerramos los domingos. Por favor, elige otro día.", android.widget.Toast.LENGTH_LONG).show()
+                if (fechaComprobacion.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    Toast.makeText(this, "Cerramos los domingos. Por favor, elige otro día.", Toast.LENGTH_LONG).show()
                     return@DatePickerDialog // Salimos del selector de fecha sin abrir la hora
                 }
 
@@ -86,11 +95,11 @@ class MainActivity : AppCompatActivity() {
                 val diaFormateado = String.format("%02d", diaElegido)
                 val fechaParcial = "$añoElegido-$mesFormateado-$diaFormateado"
 
-                val selectorHora = android.app.TimePickerDialog(this, { _, horaElegida, minutoElegido ->
+                val selectorHora = TimePickerDialog(this, { _, horaElegida, minutoElegido ->
 
                     // Comprobamos el horario comercial (ej. de 09:00 a 19:59)
                     if (horaElegida < 9 || horaElegida >= 20) {
-                        android.widget.Toast.makeText(this, "Horario válido: de 09:00 a 20:00", android.widget.Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Horario válido: de 09:00 a 20:00", Toast.LENGTH_LONG).show()
                         return@TimePickerDialog
                     }
 
@@ -101,11 +110,12 @@ class MainActivity : AppCompatActivity() {
                     val fechaVisual = "$diaFormateado/$mesFormateado/$añoElegido a las $horaFormateada:$minutoFormateado"
                     textoFechaYHora.text = fechaVisual
 
-                }, calendarioActual.get(java.util.Calendar.HOUR_OF_DAY), calendarioActual.get(java.util.Calendar.MINUTE), true)
+                }, calendarioActual.get(Calendar.HOUR_OF_DAY), calendarioActual.get(Calendar.MINUTE), true)
 
                 selectorHora.show()
 
-            }, calendarioActual.get(java.util.Calendar.YEAR), calendarioActual.get(java.util.Calendar.MONTH), calendarioActual.get(java.util.Calendar.DAY_OF_MONTH))
+            }, calendarioActual.get(Calendar.YEAR), calendarioActual.get(Calendar.MONTH), calendarioActual.get(
+                Calendar.DAY_OF_MONTH))
 
             // Bloqueamos las fechas pasadas. El usuario solo puede elegir desde hoy en adelante.
             selectorFecha.datePicker.minDate = System.currentTimeMillis()
@@ -132,8 +142,8 @@ class MainActivity : AppCompatActivity() {
                     fecha_hora = fechaSeleccionadaParaBackend
                 )
 
-                api.crearCita(citaDePrueba).enqueue(object : retrofit2.Callback<Cita> {
-                    override fun onResponse(call: retrofit2.Call<Cita>, response: retrofit2.Response<Cita>) {
+                api.crearCita(citaDePrueba).enqueue(object : Callback<Cita> {
+                    override fun onResponse(call: Call<Cita>, response: Response<Cita>) {
                         if (response.isSuccessful) {
                             Toast.makeText(this@MainActivity, "¡Cita reservada con éxito, $nombreClienteGuardado!", Toast.LENGTH_SHORT).show()
                             textoFechaYHora.text = "Seleccionar Fecha y Hora"
@@ -143,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onFailure(call: retrofit2.Call<Cita>, t: Throwable) {
+                    override fun onFailure(call: Call<Cita>, t: Throwable) {
                         Toast.makeText(this@MainActivity, "Fallo de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -151,7 +161,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         botonCitas.setOnClickListener {
-            startActivity(android.content.Intent(this, HistorialActivity::class.java))
+            startActivity(Intent(this, HistorialActivity::class.java))
         }
 
         // Configuración del botón Cerrar Sesión
@@ -164,7 +174,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
 
             // 3. Lo devolvemos a la pantalla de Login y destruimos la actual
-            val intent = android.content.Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }

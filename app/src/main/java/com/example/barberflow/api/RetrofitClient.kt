@@ -1,4 +1,4 @@
-package com.example.barberflow
+package com.example.barberflow.api
 
 import android.content.Context
 import okhttp3.OkHttpClient
