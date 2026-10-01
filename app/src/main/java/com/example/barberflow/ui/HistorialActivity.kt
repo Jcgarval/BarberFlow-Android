@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 // Importaciones de nuestro proyecto
 import com.example.barberflow.R
-import com.example.barberflow.adapters.CitasAdapter
 import com.example.barberflow.api.RetrofitClient
+import com.example.barberflow.adapters.CitasAdapter
 
 class HistorialActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

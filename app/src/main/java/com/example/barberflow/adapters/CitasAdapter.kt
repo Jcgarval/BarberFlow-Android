@@ -3,59 +3,53 @@ package com.example.barberflow.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barberflow.R
 import com.example.barberflow.models.Cita
-import java.text.SimpleDateFormat
-import java.util.Locale
 
-// Recibimos una MutableList y una función (callback) para ejecutar al pulsar la papelera
 class CitasAdapter(
-    private val listaCitas: MutableList<Cita>,
-    private val onEliminarClick: (Int, Int) -> Unit
+    private var listaCitas: MutableList<Cita>,
+    private val onDeleteClick: (Int, Int) -> Unit // Recibe (idCita, posicionEnLista)
 ) : RecyclerView.Adapter<CitasAdapter.CitaViewHolder>() {
 
     class CitaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textoServicio: TextView = itemView.findViewById(R.id.tv_item_servicio)
-        val textoBarbero: TextView = itemView.findViewById(R.id.tv_item_barbero)
-        val textoFecha: TextView = itemView.findViewById(R.id.tv_item_fecha)
-        val btnEliminar: ImageButton = itemView.findViewById(R.id.btn_eliminar_cita)
+        val tvFecha: TextView = itemView.findViewById(R.id.tv_cita_fecha)
+        val tvDetalles: TextView = itemView.findViewById(R.id.tv_cita_detalles)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitaViewHolder {
-        val vista = LayoutInflater.from(parent.context).inflate(R.layout.item_cita, parent, false)
-        return CitaViewHolder(vista)
+        // Usamos tu layout real item_cita_admin
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_cita_admin, parent, false)
+        return CitaViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CitaViewHolder, position: Int) {
-        val citaActual = listaCitas[position]
+        val cita = listaCitas[position]
 
-        holder.textoServicio.text = "Servicio: " + citaActual.servicio.nombre
-        holder.textoBarbero.text = "Barbero: " + citaActual.barbero.nombre
+        // Rellenamos con los campos de tu modelo Cita
+        holder.tvFecha.text = "Fecha: ${cita.fecha_hora}"
+        holder.tvDetalles.text = "Detalles de la cita ID: ${cita.id}" // O los campos que muestres habitualmente
 
-        try {
-            val fechaSinMilisegundos = citaActual.fecha_hora.substringBefore(".")
-            val formatoEntrada = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-            val formatoSalida = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            val fechaParseada = formatoEntrada.parse(fechaSinMilisegundos)
-            holder.textoFecha.text = fechaParseada?.let { formatoSalida.format(it) } ?: citaActual.fecha_hora
-        } catch (e: Exception) {
-            holder.textoFecha.text = citaActual.fecha_hora
-        }
-
-        // Detectamos el clic en la papelera y enviamos el ID de la cita y su posición
-        holder.btnEliminar.setOnClickListener {
-            onEliminarClick(citaActual.id, holder.adapterPosition)
+        // Al pulsar en la tarjeta de la cita se dispara el evento de borrado/gestión
+        holder.itemView.setOnClickListener {
+            onDeleteClick(cita.id, position)
         }
     }
 
     override fun getItemCount(): Int = listaCitas.size
 
-    // Función para borrar visualmente la cita sin tener que recargar toda la pantalla
-    fun eliminarItem(posicion: Int) {
-        listaCitas.removeAt(posicion)
-        notifyItemRemoved(posicion)
+    // Método que llama HistorialActivity para borrar la tarjeta visualmente al instante
+    fun eliminarItem(position: Int) {
+        if (position in 0 until listaCitas.size) {
+            listaCitas.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, listaCitas.size)
+        }
+    }
+
+    fun actualizarLista(nuevaLista: List<Cita>) {
+        listaCitas = nuevaLista.toMutableList()
+        notifyDataSetChanged()
     }
 }
