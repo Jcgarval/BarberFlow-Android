@@ -1,13 +1,17 @@
 package com.example.barberflow.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barberflow.R
 import com.example.barberflow.models.CitaDetalle
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class AdminCitasAdapter(
     private var listaCitas: List<CitaDetalle>,
@@ -31,7 +35,9 @@ class AdminCitasAdapter(
 
         holder.tvServicio.text = cita.servicio_nombre
         holder.tvBarbero.text = "Barbero: ${cita.barbero_nombre} | Cliente: ${cita.cliente_nombre}"
-        val fechaLegible = cita.fecha_hora.replace("T", "  ")
+
+        // Aplicamos el formato dd/MM/yyyy HH:mm usando la función auxiliar
+        val fechaLegible = formatearFecha(cita.fecha_hora)
         holder.tvFecha.text = "📅 $fechaLegible"
 
         holder.btnEliminar.setOnClickListener {
@@ -46,5 +52,18 @@ class AdminCitasAdapter(
     fun actualizarLista(nuevaLista: List<CitaDetalle>) {
         listaCitas = nuevaLista
         notifyDataSetChanged()
+    }
+
+    // Función auxiliar para traducir la fecha ISO al formato visual deseado
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun formatearFecha(fechaIso: String): String {
+        return try {
+            val fechaParseada = LocalDateTime.parse(fechaIso)
+            val formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            fechaParseada.format(formateador)
+        } catch (e: Exception) {
+            // Si la fecha viene mal formada desde la API, mostramos la original por seguridad
+            fechaIso
+        }
     }
 }

@@ -3,6 +3,9 @@ package com.example.barberflow.ui
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +25,8 @@ class AdminCitasActivity : AppCompatActivity() {
 
     private lateinit var rvCitas: RecyclerView
     private lateinit var adapter: AdminCitasAdapter
+    private lateinit var progressBar: ProgressBar
+    private lateinit var tvEmptyState: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +40,9 @@ class AdminCitasActivity : AppCompatActivity() {
         }
 
         rvCitas = findViewById(R.id.rv_citas)
+        progressBar = findViewById(R.id.progressBar)
+        tvEmptyState = findViewById(R.id.tvEmptyState)
+
         rvCitas.layoutManager = LinearLayoutManager(this)
 
         adapter = AdminCitasAdapter(emptyList()) { cita ->
@@ -49,10 +57,27 @@ class AdminCitasActivity : AppCompatActivity() {
         val api = RetrofitClient.getApi(this)
 
         lifecycleScope.launch {
+            // 1. Mostramos la rueda de carga y ocultamos la lista antes de la petición
+            progressBar.visibility = View.VISIBLE
+            rvCitas.visibility = View.GONE
+            tvEmptyState.visibility = View.GONE
+
             try {
                 val listaCitas = api.obtenerCitasDetalladas()
-                adapter.actualizarLista(listaCitas)
+
+                // 2. Petición terminada, ocultamos la rueda
+                progressBar.visibility = View.GONE
+
+                // 3. Evaluamos si la lista está vacía para mostrar un elemento u otro
+                if (listaCitas.isEmpty()) {
+                    tvEmptyState.visibility = View.VISIBLE
+                } else {
+                    rvCitas.visibility = View.VISIBLE
+                    adapter.actualizarLista(listaCitas)
+                }
             } catch (e: Exception) {
+                // En caso de error, ocultamos la rueda
+                progressBar.visibility = View.GONE
                 Log.e("BarberFlow", "Error obteniendo citas: ", e)
                 Toast.makeText(this@AdminCitasActivity, "Error al cargar agenda", Toast.LENGTH_SHORT).show()
             }
@@ -83,6 +108,7 @@ class AdminCitasActivity : AppCompatActivity() {
             try {
                 api.eliminarCita(id)
                 Toast.makeText(this@AdminCitasActivity, "Cita cancelada con éxito", Toast.LENGTH_SHORT).show()
+                // Al recargar, volverá a mostrar la rueda y comprobará si la lista se quedó vacía
                 cargarCitas()
             } catch (e: Exception) {
                 Toast.makeText(this@AdminCitasActivity, "Error al cancelar la cita: ${e.message}", Toast.LENGTH_LONG).show()
