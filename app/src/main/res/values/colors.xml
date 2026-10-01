@@ -2,4 +2,24 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta BarberFlow: carbón, dorado y crema -->
+    <color name="bf_charcoal">#1F1F23</color>
+    <color name="bf_gold">#B8892B</color>
+    <color name="bf_gold_light">#E0B24A</color>
+    <color name="bf_gold_container">#F6E7C1</color>
+    <color name="bf_cream">#FAF7F2</color>
+    <color name="bf_cream_variant">#EFE8DA</color>
+    <color name="bf_outline">#CFC4AE</color>
+    <color name="bf_error">#B3261E</color>
+
+    <!-- Modo oscuro -->
+    <color name="bf_dark_bg">#141416</color>
+    <color name="bf_dark_surface">#1E1E22</color>
+    <color name="bf_dark_surface_variant">#2A2A2F</color>
+    <color name="bf_dark_outline">#4A4A52</color>
+    <color name="bf_dark_text">#ECE8DF</color>
+    <color name="bf_dark_text_variant">#B9B3A5</color>
+    <color name="bf_dark_gold_container">#4A3A12</color>
+    <color name="bf_dark_error">#F2B8B5</color>
 </resources>

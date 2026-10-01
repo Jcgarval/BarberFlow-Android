@@ -1,8 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Tema claro -->
     <style name="Base.Theme.BarberFlow" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/bf_charcoal</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/bf_gold_container</item>
+        <item name="colorOnPrimaryContainer">@color/bf_charcoal</item>
+
+        <item name="colorSecondary">@color/bf_gold</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/bf_gold_container</item>
+        <item name="colorOnSecondaryContainer">@color/bf_charcoal</item>
+
+        <item name="android:colorBackground">@color/bf_cream</item>
+        <item name="colorOnBackground">@color/bf_charcoal</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/bf_charcoal</item>
+        <item name="colorSurfaceVariant">@color/bf_cream_variant</item>
+        <item name="colorOnSurfaceVariant">#5E5A50</item>
+        <item name="colorOutline">@color/bf_outline</item>
+
+        <item name="colorError">@color/bf_error</item>
+        <item name="colorOnError">@color/white</item>
+
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.BarberFlow.Rounded</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.BarberFlow.Rounded</item>
+    </style>
+
+    <style name="ShapeAppearance.BarberFlow.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">14dp</item>
     </style>
 
     <style name="Theme.BarberFlow" parent="Base.Theme.BarberFlow" />
