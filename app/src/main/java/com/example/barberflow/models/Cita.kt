@@ -4,7 +4,7 @@ data class BarberoInfo(val nombre: String)
 data class ServicioInfo(val nombre: String)
 
 data class Barbero(val id: Int, val nombre: String)
-data class Servicio(val id: Int, val nombre: String)
+data class Servicio(val id: Int, val nombre: String, val duracion_minutos: Int, val precio: Double)
 
 data class Cita(
     val id: Int = 0,
@@ -15,6 +15,7 @@ data class Cita(
     var barbero: BarberoInfo = BarberoInfo(""),
     var servicio: ServicioInfo = ServicioInfo("")
 )
+
 data class LoginRequest(
     val email: String,
     val password: String
