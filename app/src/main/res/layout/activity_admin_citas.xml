@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     android:orientation="vertical"
-    android:background="#FAFAFA"
     android:padding="16dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Agenda de Citas"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:layout_margin="8dp"
         android:layout_marginBottom="16dp"
-        android:textColor="#333333"/>
+        android:text="Agenda de citas"
+        android:textAppearance="?attr/textAppearanceHeadlineMedium"
+        android:textColor="?attr/colorOnBackground"
+        android:textStyle="bold" />
 
-    <!-- FrameLayout permite superponer elementos en el mismo espacio -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,9 +23,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_citas"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="16dp" />
 
-        <!-- Rueda de carga (ProgressBar) centrada -->
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -33,15 +34,14 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
-        <!-- Texto para cuando la lista está vacía centrado -->
         <TextView
             android:id="@+id/tvEmptyState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="No hay citas programadas"
-            android:textSize="18sp"
-            android:textColor="#888888"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone" />
 
     </FrameLayout>

@@ -13,8 +13,21 @@ data class Cita(
     var servicio_id: Int,
     var fecha_hora: String,
     var barbero: BarberoInfo = BarberoInfo(""),
-    var servicio: ServicioInfo = ServicioInfo("")
+    var servicio: ServicioInfo = ServicioInfo(""),
+    var estado: String? = EstadoCita.PENDIENTE
 )
+
+// Respuesta de GET /citas/disponibilidad
+data class DisponibilidadResponse(
+    val fecha: String,
+    val barbero_id: Int,
+    val servicio_id: Int,
+    val duracion_minutos: Int,
+    val franjas: List<String>   // horas de inicio libres, formato "HH:mm"
+)
+
+// Cuerpo de PATCH /citas/{id}/estado
+data class EstadoUpdate(val estado: String)
 
 data class LoginRequest(
     val email: String,

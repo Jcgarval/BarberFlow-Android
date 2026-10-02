@@ -1,25 +1,26 @@
 package com.example.barberflow.adapters
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barberflow.R
 import com.example.barberflow.models.CitaDetalle
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.example.barberflow.models.EstadoCita
+import com.example.barberflow.models.aplicarBadgeEstado
+import com.example.barberflow.models.formatearFechaHora
 
 class AdminCitasAdapter(
     private var listaCitas: List<CitaDetalle>,
-    private val onDeleteClick: (CitaDetalle) -> Unit
+    private val onDeleteClick: (CitaDetalle) -> Unit,
+    private val onItemClick: (CitaDetalle) -> Unit
 ) : RecyclerView.Adapter<AdminCitasAdapter.CitaViewHolder>() {
 
     class CitaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvServicio: TextView = itemView.findViewById(R.id.tv_item_servicio)
+        val tvEstado: TextView = itemView.findViewById(R.id.tv_item_estado)
         val tvBarbero: TextView = itemView.findViewById(R.id.tv_item_barbero)
         val tvFecha: TextView = itemView.findViewById(R.id.tv_item_fecha)
         val btnEliminar: ImageButton = itemView.findViewById(R.id.btn_eliminar_cita)
@@ -34,36 +35,21 @@ class AdminCitasAdapter(
         val cita = listaCitas[position]
 
         holder.tvServicio.text = cita.servicio_nombre
+        aplicarBadgeEstado(holder.tvEstado, cita.estado)
         holder.tvBarbero.text = "Barbero: ${cita.barbero_nombre} | Cliente: ${cita.cliente_nombre}"
+        holder.tvFecha.text = "📅 ${formatearFechaHora(cita.fecha_hora)}"
 
-        // Aplicamos el formato dd/MM/yyyy HH:mm usando la función auxiliar
-        val fechaLegible = formatearFecha(cita.fecha_hora)
-        holder.tvFecha.text = "📅 $fechaLegible"
+        holder.itemView.alpha = if (cita.estado == EstadoCita.CANCELADA) 0.6f else 1f
 
-        holder.btnEliminar.setOnClickListener {
-            onDeleteClick(cita)
-        }
+        // Tocar la tarjeta = cambiar el estado; la papelera = eliminar definitivamente
+        holder.itemView.setOnClickListener { onItemClick(cita) }
+        holder.btnEliminar.setOnClickListener { onDeleteClick(cita) }
     }
 
-    override fun getItemCount(): Int {
-        return listaCitas.size
-    }
+    override fun getItemCount(): Int = listaCitas.size
 
     fun actualizarLista(nuevaLista: List<CitaDetalle>) {
         listaCitas = nuevaLista
         notifyDataSetChanged()
-    }
-
-    // Función auxiliar para traducir la fecha ISO al formato visual deseado
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun formatearFecha(fechaIso: String): String {
-        return try {
-            val fechaParseada = LocalDateTime.parse(fechaIso)
-            val formateador = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-            fechaParseada.format(formateador)
-        } catch (e: Exception) {
-            // Si la fecha viene mal formada desde la API, mostramos la original por seguridad
-            fechaIso
-        }
     }
 }

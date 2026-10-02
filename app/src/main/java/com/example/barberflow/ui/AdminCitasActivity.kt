@@ -1,6 +1,5 @@
 package com.example.barberflow.ui
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,16 +12,19 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.launch
-
-// Importaciones de nuestro proyecto
 import com.example.barberflow.R
-import com.example.barberflow.api.RetrofitClient
 import com.example.barberflow.adapters.AdminCitasAdapter
+import com.example.barberflow.api.RetrofitClient
 import com.example.barberflow.models.CitaDetalle
+import com.example.barberflow.models.EstadoCita
+import com.example.barberflow.models.EstadoUpdate
+import com.example.barberflow.models.mensajeDeError
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 class AdminCitasActivity : AppCompatActivity() {
 
+    private val api by lazy { RetrofitClient.getApi(this) }
     private lateinit var rvCitas: RecyclerView
     private lateinit var adapter: AdminCitasAdapter
     private lateinit var progressBar: ProgressBar
@@ -45,30 +47,26 @@ class AdminCitasActivity : AppCompatActivity() {
 
         rvCitas.layoutManager = LinearLayoutManager(this)
 
-        adapter = AdminCitasAdapter(emptyList()) { cita ->
-            mostrarDialogoEliminarCita(cita)
-        }
+        adapter = AdminCitasAdapter(
+            emptyList(),
+            onDeleteClick = { cita -> mostrarDialogoEliminarCita(cita) },
+            onItemClick = { cita -> mostrarDialogoCambiarEstado(cita) }
+        )
         rvCitas.adapter = adapter
 
         cargarCitas()
     }
 
     private fun cargarCitas() {
-        val api = RetrofitClient.getApi(this)
-
         lifecycleScope.launch {
-            // 1. Mostramos la rueda de carga y ocultamos la lista antes de la petición
             progressBar.visibility = View.VISIBLE
             rvCitas.visibility = View.GONE
             tvEmptyState.visibility = View.GONE
 
             try {
                 val listaCitas = api.obtenerCitasDetalladas()
-
-                // 2. Petición terminada, ocultamos la rueda
                 progressBar.visibility = View.GONE
 
-                // 3. Evaluamos si la lista está vacía para mostrar un elemento u otro
                 if (listaCitas.isEmpty()) {
                     tvEmptyState.visibility = View.VISIBLE
                 } else {
@@ -76,7 +74,6 @@ class AdminCitasActivity : AppCompatActivity() {
                     adapter.actualizarLista(listaCitas)
                 }
             } catch (e: Exception) {
-                // En caso de error, ocultamos la rueda
                 progressBar.visibility = View.GONE
                 Log.e("BarberFlow", "Error obteniendo citas: ", e)
                 Toast.makeText(this@AdminCitasActivity, "Error al cargar agenda", Toast.LENGTH_SHORT).show()
@@ -84,34 +81,67 @@ class AdminCitasActivity : AppCompatActivity() {
         }
     }
 
+    // ---------- Cambiar estado (tocar la tarjeta) ----------
+    private fun mostrarDialogoCambiarEstado(cita: CitaDetalle) {
+        val estadoActual = cita.estado ?: EstadoCita.PENDIENTE
+        val opciones = EstadoCita.todos.map { EstadoCita.etiqueta(it) }.toTypedArray()
+        val seleccionInicial = EstadoCita.todos.indexOf(estadoActual).coerceAtLeast(0)
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Estado de la cita de ${cita.cliente_nombre}")
+            .setSingleChoiceItems(opciones, seleccionInicial) { dialog, which ->
+                dialog.dismiss()
+                val nuevoEstado = EstadoCita.todos[which]
+                if (nuevoEstado != estadoActual) {
+                    cambiarEstadoEnApi(cita.id, nuevoEstado)
+                }
+            }
+            .setNegativeButton("Cerrar", null)
+            .show()
+    }
+
+    private fun cambiarEstadoEnApi(id: Int, nuevoEstado: String) {
+        lifecycleScope.launch {
+            try {
+                val respuesta = api.cambiarEstadoCita(id, EstadoUpdate(nuevoEstado))
+                if (respuesta.isSuccessful) {
+                    Toast.makeText(this@AdminCitasActivity, "Estado actualizado", Toast.LENGTH_SHORT).show()
+                    cargarCitas()
+                } else {
+                    // Por ejemplo: reactivar una cita cuyo hueco ya ocupó otro cliente
+                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(respuesta), Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@AdminCitasActivity, "Fallo de conexión", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    // ---------- Eliminar definitivamente (papelera) ----------
     private fun mostrarDialogoEliminarCita(cita: CitaDetalle) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Cancelar Cita")
-        builder.setMessage("¿Estás seguro de que quieres cancelar la cita de ${cita.cliente_nombre} para el servicio '${cita.servicio_nombre}'?")
-
-        builder.setPositiveButton("Sí, cancelar") { dialog, _ ->
-            eliminarCitaEnApi(cita.id)
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Volver") { dialog, _ ->
-            dialog.cancel()
-        }
-
-        builder.show()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Eliminar cita")
+            .setMessage(
+                "Se borrará definitivamente la cita de ${cita.cliente_nombre} ('${cita.servicio_nombre}'). " +
+                    "Si solo quieres liberar el hueco y conservar el historial, toca la tarjeta y márcala como Cancelada."
+            )
+            .setPositiveButton("Eliminar") { _, _ -> eliminarCitaEnApi(cita.id) }
+            .setNegativeButton("Volver", null)
+            .show()
     }
 
     private fun eliminarCitaEnApi(id: Int) {
-        val api = RetrofitClient.getApi(this)
-
         lifecycleScope.launch {
             try {
-                api.eliminarCita(id)
-                Toast.makeText(this@AdminCitasActivity, "Cita cancelada con éxito", Toast.LENGTH_SHORT).show()
-                // Al recargar, volverá a mostrar la rueda y comprobará si la lista se quedó vacía
-                cargarCitas()
+                val respuesta = api.eliminarCita(id)
+                if (respuesta.isSuccessful) {
+                    Toast.makeText(this@AdminCitasActivity, "Cita eliminada", Toast.LENGTH_SHORT).show()
+                    cargarCitas()
+                } else {
+                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(respuesta), Toast.LENGTH_LONG).show()
+                }
             } catch (e: Exception) {
-                Toast.makeText(this@AdminCitasActivity, "Error al cancelar la cita: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@AdminCitasActivity, "Error al eliminar la cita: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }

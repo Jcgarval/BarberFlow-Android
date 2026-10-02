@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -28,6 +29,20 @@ interface BarberiaApi {
 
     @DELETE("/citas/{cita_id}")
     suspend fun eliminarCita(@Path("cita_id") citaId: Int): Response<Unit>
+
+    // --- Disponibilidad y estados de cita ---
+    @GET("/citas/disponibilidad")
+    suspend fun obtenerDisponibilidad(
+        @Query("barbero_id") barberoId: Int,
+        @Query("servicio_id") servicioId: Int,
+        @Query("fecha") fecha: String   // formato yyyy-MM-dd
+    ): DisponibilidadResponse
+
+    @PATCH("/citas/{cita_id}/estado")
+    suspend fun cambiarEstadoCita(
+        @Path("cita_id") citaId: Int,
+        @Body cuerpo: EstadoUpdate
+    ): Response<Cita>
 
     // --- Rutas Comunes ---
     @GET("/barberos/")

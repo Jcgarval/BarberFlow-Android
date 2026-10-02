@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores de las etiquetas de estado (legibles con texto blanco en claro y oscuro) -->
+    <color name="bf_estado_pendiente">#9A6B00</color>
+    <color name="bf_estado_confirmada">#2E7D32</color>
+    <color name="bf_estado_completada">#455A64</color>
+    <color name="bf_estado_cancelada">#B3261E</color>
+</resources>
