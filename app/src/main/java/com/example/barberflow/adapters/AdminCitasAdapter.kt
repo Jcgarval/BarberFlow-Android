@@ -36,7 +36,7 @@ class AdminCitasAdapter(
 
         holder.tvServicio.text = cita.servicio_nombre
         aplicarBadgeEstado(holder.tvEstado, cita.estado)
-        holder.tvBarbero.text = "Barbero: ${cita.barbero_nombre} | Cliente: ${cita.cliente_nombre}"
+        holder.tvBarbero.text = holder.itemView.context.getString(R.string.item_cita_barbero_cliente, cita.barbero_nombre, cita.cliente_nombre)
         holder.tvFecha.text = "📅 ${formatearFechaHora(cita.fecha_hora)}"
 
         holder.itemView.alpha = if (cita.estado == EstadoCita.CANCELADA) 0.6f else 1f

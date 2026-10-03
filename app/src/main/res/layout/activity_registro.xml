@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?android:attr/colorBackground"
-        app:navigationContentDescription="Volver"
+        app:navigationContentDescription="@string/comun_volver"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:navigationIconTint="?attr/colorOnBackground" />
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Crea tu cuenta"
+            android:text="@string/registro_crea_tu_cuenta"
             android:textAppearance="?attr/textAppearanceHeadlineMedium"
             android:textColor="?attr/colorOnBackground"
             android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="32dp"
             android:gravity="center"
-            android:text="Regístrate para reservar tus citas"
+            android:text="@string/registro_registrate_para_reservar_tus_citas"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Nombre completo">
+            android:hint="@string/registro_nombre_completo">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_registro_nombre"
@@ -66,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Correo electrónico">
+            android:hint="@string/comun_correo_electronico">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_registro_email"
@@ -80,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:hint="Contraseña"
+            android:hint="@string/comun_contrasena"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -94,7 +94,7 @@
             android:id="@+id/btn_registrar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Registrarme"
+            android:text="@string/registro_registrarme"
             android:textSize="16sp"
             app:cornerRadius="14dp" />
 

@@ -88,7 +88,7 @@ class GestionBarberosActivity : AppCompatActivity() {
                 adapter.actualizarLista(lista)
                 tvVacio.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
             } catch (e: Exception) {
-                avisar("No se pudieron cargar los barberos")
+                avisar(getString(R.string.barberos_no_se_pudieron_cargar_los_barberos))
             }
         }
     }
@@ -106,10 +106,10 @@ class GestionBarberosActivity : AppCompatActivity() {
         nombre.doAfterTextChanged { campo.error = null }
 
         val dialogo = MaterialAlertDialogBuilder(this)
-            .setTitle(if (barbero == null) "Nuevo barbero" else "Editar barbero")
+            .setTitle(if (barbero == null) getString(R.string.barberos_nuevo_barbero) else getString(R.string.barberos_editar_barbero))
             .setView(vista)
-            .setPositiveButton(if (barbero == null) "Guardar" else "Actualizar", null) // se define abajo para poder NO cerrar si hay errores
-            .setNegativeButton("Cancelar", null)
+            .setPositiveButton(if (barbero == null) getString(R.string.comun_guardar) else getString(R.string.comun_actualizar), null) // se define abajo para poder NO cerrar si hay errores
+            .setNegativeButton(R.string.comun_cancelar, null)
             .create()
 
         dialogo.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
@@ -118,8 +118,8 @@ class GestionBarberosActivity : AppCompatActivity() {
             dialogo.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 val texto = nombre.text.toString().trim()
                 when {
-                    texto.isEmpty() -> campo.error = "Escribe un nombre"
-                    texto.length > 60 -> campo.error = "Máximo 60 caracteres"
+                    texto.isEmpty() -> campo.error = getString(R.string.comun_escribe_un_nombre)
+                    texto.length > 60 -> campo.error = getString(R.string.comun_maximo_60_caracteres)
                     barbero != null && texto == barbero.nombre -> dialogo.dismiss() // no ha cambiado nada
                     else -> {
                         dialogo.dismiss()
@@ -135,12 +135,12 @@ class GestionBarberosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 api.crearBarbero(BarberoCreate(nombre))
-                avisar("Barbero guardado")
+                avisar(getString(R.string.barberos_barbero_guardado))
                 cargarBarberos()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionBarberosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -149,12 +149,12 @@ class GestionBarberosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 api.actualizarBarbero(id, BarberoCreate(nuevoNombre))
-                avisar("Barbero actualizado")
+                avisar(getString(R.string.barberos_barbero_actualizado))
                 cargarBarberos()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionBarberosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -162,13 +162,12 @@ class GestionBarberosActivity : AppCompatActivity() {
     // ---------- Eliminar ----------
     private fun mostrarDialogoEliminar(barbero: Barbero) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Eliminar barbero")
+            .setTitle(R.string.barberos_eliminar_barbero)
             .setMessage(
-                "¿Quieres eliminar a ${barbero.nombre}?\n\n" +
-                    "Si tiene citas asociadas se dará de baja: no se podrá reservar con él, pero el historial se conserva."
+                getString(R.string.barberos_quieres_eliminar_a_si_tiene_citas_asociadas, barbero.nombre)
             )
-            .setPositiveButton("Eliminar") { _, _ -> eliminarBarberoEnApi(barbero.id) }
-            .setNegativeButton("Cancelar", null)
+            .setPositiveButton(R.string.comun_eliminar) { _, _ -> eliminarBarberoEnApi(barbero.id) }
+            .setNegativeButton(R.string.comun_cancelar, null)
             .show()
     }
 
@@ -178,13 +177,13 @@ class GestionBarberosActivity : AppCompatActivity() {
                 val respuesta = api.eliminarBarbero(id)
                 if (respuesta.isSuccessful) {
                     // El servidor explica si se borró o se dio de baja
-                    avisar(respuesta.body()?.mensaje ?: "Barbero eliminado")
+                    avisar(respuesta.body()?.mensaje ?: getString(R.string.barberos_barbero_eliminado))
                     cargarBarberos()
                 } else {
-                    avisar(mensajeDeError(respuesta))
+                    avisar(mensajeDeError(this@GestionBarberosActivity, respuesta))
                 }
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -195,29 +194,29 @@ class GestionBarberosActivity : AppCompatActivity() {
             try {
                 val bajas = api.obtenerBarberosInactivos()
                 if (bajas.isEmpty()) {
-                    avisar("No hay barberos dados de baja")
+                    avisar(getString(R.string.barberos_no_hay_barberos_dados_de_baja))
                     return@launch
                 }
                 val nombres = bajas.map { it.nombre }.toTypedArray()
                 MaterialAlertDialogBuilder(this@GestionBarberosActivity)
-                    .setTitle("Barberos dados de baja")
+                    .setTitle(R.string.barberos_barberos_dados_de_baja)
                     .setItems(nombres) { _, posicion -> confirmarReactivacion(bajas[posicion]) }
-                    .setNegativeButton("Cerrar", null)
+                    .setNegativeButton(R.string.comun_cerrar, null)
                     .show()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionBarberosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
 
     private fun confirmarReactivacion(barbero: Barbero) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Reactivar barbero")
-            .setMessage("¿Quieres que ${barbero.nombre} vuelva a aparecer para reservar citas?")
-            .setPositiveButton("Reactivar") { _, _ -> reactivarBarberoEnApi(barbero.id) }
-            .setNegativeButton("Cancelar", null)
+            .setTitle(R.string.barberos_reactivar_barbero)
+            .setMessage(getString(R.string.barberos_quieres_que_vuelva_a_aparecer_para_reservar, barbero.nombre))
+            .setPositiveButton(R.string.comun_reactivar) { _, _ -> reactivarBarberoEnApi(barbero.id) }
+            .setNegativeButton(R.string.comun_cancelar, null)
             .show()
     }
 
@@ -225,12 +224,12 @@ class GestionBarberosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val barbero = api.reactivarBarbero(id)
-                avisar("${barbero.nombre} vuelve a estar activo")
+                avisar(getString(R.string.barberos_vuelve_a_estar_activo, barbero.nombre))
                 cargarBarberos()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionBarberosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }

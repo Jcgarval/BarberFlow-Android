@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:hint="Nombre (ej: Corte + Barba)">
+        android:hint="@string/dialogo_servicio_nombre_ej_corte_barba">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_nombre_servicio"
@@ -37,8 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:hint="Duración"
-            app:suffixText="min">
+            android:hint="@string/dialogo_servicio_duracion"
+            app:suffixText="@string/dialogo_servicio_min">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_duracion_servicio"
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_weight="1"
-            android:hint="Precio"
-            app:suffixText="€">
+            android:hint="@string/dialogo_servicio_precio"
+            app:suffixText="@string/dialogo_servicio_euro">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_precio_servicio"

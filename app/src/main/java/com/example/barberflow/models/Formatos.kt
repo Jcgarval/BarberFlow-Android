@@ -1,5 +1,6 @@
 package com.example.barberflow.models
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -22,6 +23,17 @@ object EstadoCita {
 
     val todos = listOf(PENDIENTE, CONFIRMADA, COMPLETADA, CANCELADA)
 
+    /** Texto del estado leído de strings.xml (usar siempre esta versión). */
+    fun etiqueta(context: Context, estado: String?): String = context.getString(
+        when (estado) {
+            CONFIRMADA -> R.string.estado_confirmada
+            COMPLETADA -> R.string.estado_completada
+            CANCELADA -> R.string.estado_cancelada
+            else -> R.string.estado_pendiente
+        }
+    )
+
+    @Deprecated("Usa etiqueta(context, estado): lee el texto de strings.xml", ReplaceWith("etiqueta(context, estado)"))
     fun etiqueta(estado: String?): String = when (estado) {
         CONFIRMADA -> "Confirmada"
         COMPLETADA -> "Completada"
@@ -43,7 +55,7 @@ object EstadoCita {
 
 /** Pinta una "etiqueta" redondeada con el texto y el color del estado. */
 fun aplicarBadgeEstado(textView: TextView, estado: String?) {
-    textView.text = EstadoCita.etiqueta(estado)
+    textView.text = EstadoCita.etiqueta(textView.context, estado)
     val color = ContextCompat.getColor(textView.context, EstadoCita.color(estado))
     textView.backgroundTintList = ColorStateList.valueOf(color)
 }
@@ -59,7 +71,28 @@ fun formatearFechaHora(fechaIso: String): String {
     }
 }
 
-/** Saca el mensaje que manda FastAPI en {"detail": "..."} o, si no hay, uno genérico. */
+/** Saca el mensaje que manda FastAPI en {"detail": "..."} o, si no hay, uno genérico leído de strings.xml. */
+fun mensajeDeError(context: Context, response: Response<*>): String {
+    val detalle = try {
+        JSONObject(response.errorBody()?.string() ?: "").optString("detail")
+    } catch (e: Exception) {
+        ""
+    }
+    return when {
+        detalle.isNotBlank() && !detalle.startsWith("[") -> detalle
+        response.code() == 422 -> context.getString(R.string.error_datos_no_validos)
+        response.code() == 401 -> context.getString(R.string.error_sesion_caducada)
+        else -> context.getString(R.string.error_servidor, response.code())
+    }
+}
+
+/** Igual, para cuando Retrofit lanza HttpException (llamadas que devuelven el objeto directamente). */
+fun mensajeDeError(context: Context, e: HttpException): String {
+    val respuesta = e.response()
+    return if (respuesta != null) mensajeDeError(context, respuesta) else context.getString(R.string.error_servidor, e.code())
+}
+
+@Deprecated("Usa mensajeDeError(context, response): lee los textos de strings.xml", ReplaceWith("mensajeDeError(context, response)"))
 fun mensajeDeError(response: Response<*>): String {
     val detalle = try {
         JSONObject(response.errorBody()?.string() ?: "").optString("detail")
@@ -74,7 +107,7 @@ fun mensajeDeError(response: Response<*>): String {
     }
 }
 
-/** Igual que mensajeDeError(response), pero para cuando Retrofit lanza HttpException (llamadas que devuelven el objeto directamente). */
+@Deprecated("Usa mensajeDeError(context, e): lee los textos de strings.xml", ReplaceWith("mensajeDeError(context, e)"))
 fun mensajeDeError(e: HttpException): String {
     val respuesta = e.response()
     return if (respuesta != null) mensajeDeError(respuesta) else "Error del servidor: ${e.code()}"

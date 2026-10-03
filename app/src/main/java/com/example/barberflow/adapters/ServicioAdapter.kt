@@ -34,7 +34,7 @@ class ServicioAdapter(
         val servicio = servicios[position]
 
         holder.tvNombre.text = servicio.nombre
-        holder.tvDetalles.text = "${servicio.duracion_minutos} min"
+        holder.tvDetalles.text = holder.itemView.context.getString(R.string.item_servicio_min, servicio.duracion_minutos)
         holder.tvPrecio.text = formatearPrecio(servicio.precio)
 
         holder.btnEditar.setOnClickListener { onEditClick(servicio) }

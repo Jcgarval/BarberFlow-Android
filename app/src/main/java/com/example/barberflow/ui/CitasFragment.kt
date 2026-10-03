@@ -82,7 +82,7 @@ class CitasFragment : Fragment(R.layout.fragment_citas) {
         if (!EstadoCita.sePuedeCancelar(cita.estado)) {
             Toast.makeText(
                 requireContext(),
-                getString(R.string.citas_ya_estado, EstadoCita.etiqueta(cita.estado).lowercase()),
+                getString(R.string.citas_ya_estado, EstadoCita.etiqueta(requireContext(), cita.estado).lowercase()),
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -111,7 +111,7 @@ class CitasFragment : Fragment(R.layout.fragment_citas) {
                     Toast.makeText(requireContext(), R.string.citas_cancelada, Toast.LENGTH_SHORT).show()
                     cargarCitas()
                 } else {
-                    Toast.makeText(requireContext(), mensajeDeError(respuesta), Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), mensajeDeError(requireContext(), respuesta), Toast.LENGTH_LONG).show()
                 }
             } catch (e: CancellationException) {
                 throw e

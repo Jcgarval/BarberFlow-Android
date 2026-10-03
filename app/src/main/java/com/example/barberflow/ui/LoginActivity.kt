@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 btnEntrar.isEnabled = false
-                btnEntrar.text = "Iniciando sesión..."
+                btnEntrar.text = getString(R.string.login_iniciando_sesion)
 
                 lifecycleScope.launch {
                     try {
@@ -59,18 +59,18 @@ class LoginActivity : AppCompatActivity() {
                             apply()
                         }
 
-                        Toast.makeText(this@LoginActivity, "¡Bienvenido, ${respuesta.nombre}!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, getString(R.string.login_bienvenido, respuesta.nombre), Toast.LENGTH_SHORT).show()
 
                         redirigirSegunRol(respuesta.rol)
 
                     } catch (e: Exception) {
-                        Toast.makeText(this@LoginActivity, "Correo o contraseña incorrectos", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity, R.string.login_correo_o_contrasena_incorrectos, Toast.LENGTH_LONG).show()
                         btnEntrar.isEnabled = true
-                        btnEntrar.text = "Entrar"
+                        btnEntrar.text = getString(R.string.login_entrar)
                     }
                 }
             } else {
-                Toast.makeText(this, "Por favor, escribe tu correo y contraseña", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.login_por_favor_escribe_tu_correo_y_contrasena, Toast.LENGTH_SHORT).show()
             }
         }
         val tvIrRegistro = findViewById<TextView>(R.id.tv_ir_registro)
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun redirigirSegunRol(rol: String) {
         if (rol == "admin") {
-            Toast.makeText(this, "¡Modo Administrador activado!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.login_modo_administrador_activado, Toast.LENGTH_LONG).show()
 
             val intent = Intent(this, AdminActivity::class.java)
             startActivity(intent)

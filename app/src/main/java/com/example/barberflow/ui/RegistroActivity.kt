@@ -47,14 +47,14 @@ class RegistroActivity : AppCompatActivity() {
 
             if (nombre.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 btnRegistrar.isEnabled = false
-                btnRegistrar.text = "Creando cuenta..."
+                btnRegistrar.text = getString(R.string.registro_creando_cuenta)
 
                 lifecycleScope.launch {
                     try {
                         val nuevoCliente = ClienteCreate(nombre, email, password)
                         api.crearCliente(nuevoCliente)
 
-                        Toast.makeText(this@RegistroActivity, "Cuenta creada. ¡Ya puedes iniciar sesión!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@RegistroActivity, R.string.registro_cuenta_creada_ya_puedes_iniciar_sesion, Toast.LENGTH_LONG).show()
 
                         // Cerramos esta pantalla para devolver al usuario al Login
                         finish()
@@ -63,15 +63,15 @@ class RegistroActivity : AppCompatActivity() {
                         Log.e("BarberFlowError", "Fallo exacto al registrar: ", e)
 
                         // Esto te lo mostrará en el móvil
-                        val mensaje = if (e is HttpException) mensajeDeError(e) else "No se pudo conectar con el servidor"
+                        val mensaje = if (e is HttpException) mensajeDeError(this@RegistroActivity, e) else getString(R.string.comun_no_se_pudo_conectar_con_el_servidor)
                         Toast.makeText(this@RegistroActivity, mensaje, Toast.LENGTH_LONG).show()
 
                         btnRegistrar.isEnabled = true
-                        btnRegistrar.text = "Registrarme"
+                        btnRegistrar.text = getString(R.string.registro_registrarme)
                     }
                 }
             } else {
-                Toast.makeText(this, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.registro_rellena_todos_los_campos, Toast.LENGTH_SHORT).show()
             }
         }
     }

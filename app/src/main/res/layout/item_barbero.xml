@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/Widget.Material3.CardView.Outlined"
     android:layout_width="match_parent"
@@ -22,7 +23,7 @@
             android:layout_height="44dp"
             android:background="@drawable/bg_avatar"
             android:gravity="center"
-            android:text="C"
+            tools:text="C"
             android:textColor="?attr/colorOnSecondaryContainer"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -33,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="Nombre del barbero"
+            tools:text="Nombre del barbero"
             android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             android:textStyle="bold" />
@@ -43,7 +44,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Editar"
+            android:contentDescription="@string/comun_editar"
             android:src="@drawable/ic_edit"
             app:tint="?attr/colorOnSurfaceVariant" />
 
@@ -52,7 +53,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Eliminar"
+            android:contentDescription="@string/comun_eliminar"
             android:src="@drawable/ic_delete"
             app:tint="?attr/colorError" />
     </LinearLayout>

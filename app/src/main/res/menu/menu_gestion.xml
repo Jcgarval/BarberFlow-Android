@@ -5,6 +5,6 @@
     <!-- Acción de texto en la barra superior: abre la lista de elementos dados de baja -->
     <item
         android:id="@+id/action_bajas"
-        android:title="Bajas"
+        android:title="@string/gestion_bajas"
         app:showAsAction="always" />
 </menu>

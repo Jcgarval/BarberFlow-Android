@@ -17,14 +17,14 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_marginBottom="16dp"
-            android:contentDescription="Logo de BarberFlow"
+            android:contentDescription="@string/comun_logo_de_barberflow"
             android:src="@drawable/logo_barberia" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="BarberFlow"
+            android:text="@string/app_name"
             android:textAppearance="?attr/textAppearanceHeadlineMedium"
             android:textColor="?attr/colorOnBackground"
             android:textStyle="bold" />
@@ -35,7 +35,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="32dp"
             android:gravity="center"
-            android:text="Inicia sesión para reservar tu cita"
+            android:text="@string/login_inicia_sesion_para_reservar_tu_cita"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:hint="Correo electrónico">
+            android:hint="@string/comun_correo_electronico">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_email"
@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="Contraseña"
+            android:hint="@string/comun_contrasena"
             app:endIconMode="password_toggle">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +72,7 @@
             android:id="@+id/btn_entrar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Entrar"
+            android:text="@string/login_entrar"
             android:textSize="16sp"
             app:cornerRadius="14dp" />
 
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="¿No tienes cuenta? Regístrate aquí" />
+            android:text="@string/login_no_tienes_cuenta_registrate_aqui" />
 
     </LinearLayout>
 </ScrollView>

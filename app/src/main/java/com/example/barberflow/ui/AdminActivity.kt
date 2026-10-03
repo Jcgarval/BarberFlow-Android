@@ -58,7 +58,7 @@ class AdminActivity : AppCompatActivity() {
             val preferencias = getSharedPreferences("BarberFlowPrefs", MODE_PRIVATE)
             preferencias.edit().clear().apply()
 
-            Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.admin_sesion_cerrada, Toast.LENGTH_SHORT).show()
 
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -78,8 +78,8 @@ class AdminActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 // Mientras carga, ponemos unos puntos suspensivos visuales
-                tvTotalCitas.text = "..."
-                tvTotalBarberos.text = "..."
+                tvTotalCitas.text = getString(R.string.admin_cargando)
+                tvTotalBarberos.text = getString(R.string.admin_cargando)
 
                 // Llamamos a los endpoints (usamos obtenerCitasDetalladas que ya vimos que existe)
                 val citas = api.obtenerCitasDetalladas()
@@ -93,8 +93,8 @@ class AdminActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("BarberFlow", "Error al cargar datos del dashboard", e)
                 // Si hay un fallo de conexión, mostramos un guión
-                tvTotalCitas.text = "-"
-                tvTotalBarberos.text = "-"
+                tvTotalCitas.text = getString(R.string.admin_sin_valor)
+                tvTotalBarberos.text = getString(R.string.admin_sin_valor)
             }
         }
     }

@@ -90,7 +90,7 @@ class GestionServiciosActivity : AppCompatActivity() {
                 adapter.actualizarLista(lista)
                 tvVacio.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
             } catch (e: Exception) {
-                avisar("No se pudieron cargar los servicios")
+                avisar(getString(R.string.servicios_no_se_pudieron_cargar_los_servicios))
             }
         }
     }
@@ -115,10 +115,10 @@ class GestionServiciosActivity : AppCompatActivity() {
         precio.doAfterTextChanged { campoPrecio.error = null }
 
         val dialogo = MaterialAlertDialogBuilder(this)
-            .setTitle(if (servicio == null) "Nuevo servicio" else "Editar servicio")
+            .setTitle(if (servicio == null) getString(R.string.servicios_nuevo_servicio) else getString(R.string.servicios_editar_servicio))
             .setView(vista)
-            .setPositiveButton(if (servicio == null) "Guardar" else "Actualizar", null)
-            .setNegativeButton("Cancelar", null)
+            .setPositiveButton(if (servicio == null) getString(R.string.comun_guardar) else getString(R.string.comun_actualizar), null)
+            .setNegativeButton(R.string.comun_cancelar, null)
             .create()
 
         dialogo.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
@@ -131,15 +131,15 @@ class GestionServiciosActivity : AppCompatActivity() {
 
                 var valido = true
                 if (textoNombre.isEmpty()) {
-                    campoNombre.error = "Escribe un nombre"; valido = false
+                    campoNombre.error = getString(R.string.comun_escribe_un_nombre); valido = false
                 } else if (textoNombre.length > 60) {
-                    campoNombre.error = "Máximo 60 caracteres"; valido = false
+                    campoNombre.error = getString(R.string.comun_maximo_60_caracteres); valido = false
                 }
                 if (minutos == null || minutos < 5 || minutos > 480) {
-                    campoDuracion.error = "Entre 5 y 480 min"; valido = false
+                    campoDuracion.error = getString(R.string.servicios_entre_5_y_480_min); valido = false
                 }
                 if (euros == null || euros < 0 || euros > 1000) {
-                    campoPrecio.error = "Precio no válido"; valido = false
+                    campoPrecio.error = getString(R.string.servicios_precio_no_valido); valido = false
                 }
                 if (!valido || minutos == null || euros == null) return@setOnClickListener
 
@@ -158,12 +158,12 @@ class GestionServiciosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 api.crearServicio(ServicioCreate(nombre, duracion, precio))
-                avisar("Servicio guardado")
+                avisar(getString(R.string.servicios_servicio_guardado))
                 cargarServicios()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionServiciosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -172,12 +172,12 @@ class GestionServiciosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 api.actualizarServicio(id, ServicioCreate(nombre, duracion, precio))
-                avisar("Servicio actualizado")
+                avisar(getString(R.string.servicios_servicio_actualizado))
                 cargarServicios()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionServiciosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -185,13 +185,12 @@ class GestionServiciosActivity : AppCompatActivity() {
     // ---------- Eliminar ----------
     private fun mostrarDialogoEliminar(servicio: Servicio) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Eliminar servicio")
+            .setTitle(R.string.servicios_eliminar_servicio)
             .setMessage(
-                "¿Quieres eliminar '${servicio.nombre}'?\n\n" +
-                    "Si tiene citas asociadas se dará de baja: no se podrá reservar, pero el historial se conserva."
+                getString(R.string.servicios_quieres_eliminar_si_tiene_citas_asociadas_se, servicio.nombre)
             )
-            .setPositiveButton("Eliminar") { _, _ -> eliminarServicioEnApi(servicio.id) }
-            .setNegativeButton("Cancelar", null)
+            .setPositiveButton(R.string.comun_eliminar) { _, _ -> eliminarServicioEnApi(servicio.id) }
+            .setNegativeButton(R.string.comun_cancelar, null)
             .show()
     }
 
@@ -200,13 +199,13 @@ class GestionServiciosActivity : AppCompatActivity() {
             try {
                 val respuesta = api.eliminarServicio(id)
                 if (respuesta.isSuccessful) {
-                    avisar(respuesta.body()?.mensaje ?: "Servicio eliminado")
+                    avisar(respuesta.body()?.mensaje ?: getString(R.string.servicios_servicio_eliminado))
                     cargarServicios()
                 } else {
-                    avisar(mensajeDeError(respuesta))
+                    avisar(mensajeDeError(this@GestionServiciosActivity, respuesta))
                 }
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
@@ -217,31 +216,31 @@ class GestionServiciosActivity : AppCompatActivity() {
             try {
                 val bajas = api.obtenerServiciosInactivos()
                 if (bajas.isEmpty()) {
-                    avisar("No hay servicios dados de baja")
+                    avisar(getString(R.string.servicios_no_hay_servicios_dados_de_baja))
                     return@launch
                 }
                 val opciones = bajas
-                    .map { "${it.nombre} · ${it.duracion_minutos} min · ${formatearPrecio(it.precio)}" }
+                    .map { getString(R.string.servicios_baja_item, it.nombre, it.duracion_minutos, formatearPrecio(it.precio)) }
                     .toTypedArray()
                 MaterialAlertDialogBuilder(this@GestionServiciosActivity)
-                    .setTitle("Servicios dados de baja")
+                    .setTitle(R.string.servicios_servicios_dados_de_baja)
                     .setItems(opciones) { _, posicion -> confirmarReactivacion(bajas[posicion]) }
-                    .setNegativeButton("Cerrar", null)
+                    .setNegativeButton(R.string.comun_cerrar, null)
                     .show()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionServiciosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }
 
     private fun confirmarReactivacion(servicio: Servicio) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Reactivar servicio")
-            .setMessage("¿Quieres que '${servicio.nombre}' vuelva a poder reservarse?")
-            .setPositiveButton("Reactivar") { _, _ -> reactivarServicioEnApi(servicio.id) }
-            .setNegativeButton("Cancelar", null)
+            .setTitle(R.string.servicios_reactivar_servicio)
+            .setMessage(getString(R.string.servicios_quieres_que_vuelva_a_poder_reservarse, servicio.nombre))
+            .setPositiveButton(R.string.comun_reactivar) { _, _ -> reactivarServicioEnApi(servicio.id) }
+            .setNegativeButton(R.string.comun_cancelar, null)
             .show()
     }
 
@@ -249,12 +248,12 @@ class GestionServiciosActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val servicio = api.reactivarServicio(id)
-                avisar("'${servicio.nombre}' vuelve a estar disponible")
+                avisar(getString(R.string.servicios_vuelve_a_estar_disponible, servicio.nombre))
                 cargarServicios()
             } catch (e: HttpException) {
-                avisar(mensajeDeError(e))
+                avisar(mensajeDeError(this@GestionServiciosActivity, e))
             } catch (e: Exception) {
-                avisar("No se pudo conectar con el servidor")
+                avisar(getString(R.string.comun_no_se_pudo_conectar_con_el_servidor))
             }
         }
     }

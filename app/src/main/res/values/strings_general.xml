@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Textos compartidos -->
+    <string name="comun_actualizar">Actualizar</string>
+    <string name="comun_cancelar">Cancelar</string>
+    <string name="comun_cerrar">Cerrar</string>
+    <string name="comun_contrasena">Contraseña</string>
+    <string name="comun_correo_electronico">Correo electrónico</string>
+    <string name="comun_editar">Editar</string>
+    <string name="comun_eliminar">Eliminar</string>
+    <string name="comun_eliminar_cita">Eliminar cita</string>
+    <string name="comun_escribe_un_nombre">Escribe un nombre</string>
+    <string name="comun_guardar">Guardar</string>
+    <string name="comun_logo_de_barberflow">Logo de BarberFlow</string>
+    <string name="comun_maximo_60_caracteres">Máximo 60 caracteres</string>
+    <string name="comun_no_se_pudo_conectar_con_el_servidor">No se pudo conectar con el servidor</string>
+    <string name="comun_reactivar">Reactivar</string>
+    <string name="comun_volver">Volver</string>
+
+    <!-- Estados de una cita -->
+    <string name="estado_cancelada">Cancelada</string>
+    <string name="estado_completada">Completada</string>
+    <string name="estado_confirmada">Confirmada</string>
+    <string name="estado_pendiente">Pendiente</string>
+
+    <!-- Errores del servidor -->
+    <string name="error_datos_no_validos">Datos no válidos. Revisa los campos.</string>
+    <string name="error_servidor">Error del servidor: %1$s</string>
+    <string name="error_sesion_caducada">Tu sesión ha caducado. Vuelve a iniciar sesión.</string>
+
+    <!-- Inicio de sesión -->
+    <string name="login_bienvenido">¡Bienvenido, %1$s!</string>
+    <string name="login_correo_o_contrasena_incorrectos">Correo o contraseña incorrectos</string>
+    <string name="login_entrar">Entrar</string>
+    <string name="login_inicia_sesion_para_reservar_tu_cita">Inicia sesión para reservar tu cita</string>
+    <string name="login_iniciando_sesion">Iniciando sesión...</string>
+    <string name="login_modo_administrador_activado">¡Modo Administrador activado!</string>
+    <string name="login_no_tienes_cuenta_registrate_aqui">¿No tienes cuenta? Regístrate aquí</string>
+    <string name="login_por_favor_escribe_tu_correo_y_contrasena">Por favor, escribe tu correo y contraseña</string>
+
+    <!-- Registro -->
+    <string name="registro_crea_tu_cuenta">Crea tu cuenta</string>
+    <string name="registro_creando_cuenta">Creando cuenta...</string>
+    <string name="registro_cuenta_creada_ya_puedes_iniciar_sesion">Cuenta creada. ¡Ya puedes iniciar sesión!</string>
+    <string name="registro_nombre_completo">Nombre completo</string>
+    <string name="registro_registrarme">Registrarme</string>
+    <string name="registro_registrate_para_reservar_tus_citas">Regístrate para reservar tus citas</string>
+    <string name="registro_rellena_todos_los_campos">Rellena todos los campos</string>
+
+    <!-- Pantalla de bienvenida -->
+    <string name="splash_tu_estilo_a_tu_ritmo">Tu estilo, a tu ritmo</string>
+
+    <!-- Panel de administrador -->
+    <string name="admin_cargando">...</string>
+    <string name="admin_cerrar_sesion">Cerrar sesión</string>
+    <string name="admin_citas_activas">Citas activas</string>
+    <string name="admin_gestionar_barberos">Gestionar barberos</string>
+    <string name="admin_gestionar_servicios">Gestionar servicios</string>
+    <string name="admin_panel_de_control">Panel de control</string>
+    <string name="admin_plantilla">Plantilla</string>
+    <string name="admin_resumen_de_tu_barberia">Resumen de tu barbería</string>
+    <string name="admin_sesion_cerrada">Sesión cerrada</string>
+    <string name="admin_sin_valor">-</string>
+    <string name="admin_ver_agenda_de_citas">Ver agenda de citas</string>
+
+    <!-- Agenda de citas (admin) -->
+    <string name="agenda_agenda_de_citas">Agenda de citas</string>
+    <string name="agenda_cita_eliminada">Cita eliminada</string>
+    <string name="agenda_error_al_cargar_agenda">Error al cargar agenda</string>
+    <string name="agenda_error_al_eliminar_la_cita">Error al eliminar la cita: %1$s</string>
+    <string name="agenda_estado_actualizado">Estado actualizado</string>
+    <string name="agenda_estado_de_la_cita_de">Estado de la cita de %1$s</string>
+    <string name="agenda_fallo_de_conexion">Fallo de conexión</string>
+    <string name="agenda_no_hay_citas_programadas">No hay citas programadas</string>
+    <string name="agenda_se_borrara_definitivamente_la_cita_de_si">Se borrará definitivamente la cita de %1$s (\'%2$s\'). Si solo quieres liberar el hueco y conservar el historial, toca la tarjeta y márcala como Cancelada.</string>
+
+    <!-- Gestión de barberos -->
+    <string name="barberos_anadir_barbero">Añadir barbero</string>
+    <string name="barberos_aun_no_hay_barberos_anade_el_primero">Aún no hay barberos.\nAñade el primero con el botón de abajo.</string>
+    <string name="barberos_barbero_actualizado">Barbero actualizado</string>
+    <string name="barberos_barbero_eliminado">Barbero eliminado</string>
+    <string name="barberos_barbero_guardado">Barbero guardado</string>
+    <string name="barberos_barberos">Barberos</string>
+    <string name="barberos_barberos_dados_de_baja">Barberos dados de baja</string>
+    <string name="barberos_editar_barbero">Editar barbero</string>
+    <string name="barberos_eliminar_barbero">Eliminar barbero</string>
+    <string name="barberos_no_hay_barberos_dados_de_baja">No hay barberos dados de baja</string>
+    <string name="barberos_no_se_pudieron_cargar_los_barberos">No se pudieron cargar los barberos</string>
+    <string name="barberos_nuevo_barbero">Nuevo barbero</string>
+    <string name="barberos_quieres_eliminar_a_si_tiene_citas_asociadas">¿Quieres eliminar a %1$s?\n\nSi tiene citas asociadas se dará de baja: no se podrá reservar con él, pero el historial se conserva.</string>
+    <string name="barberos_quieres_que_vuelva_a_aparecer_para_reservar">¿Quieres que %1$s vuelva a aparecer para reservar citas?</string>
+    <string name="barberos_reactivar_barbero">Reactivar barbero</string>
+    <string name="barberos_vuelve_a_estar_activo">%1$s vuelve a estar activo</string>
+
+    <!-- Gestión de servicios -->
+    <string name="servicios_anadir_servicio">Añadir servicio</string>
+    <string name="servicios_aun_no_hay_servicios_anade_el_primero">Aún no hay servicios.\nAñade el primero con el botón de abajo.</string>
+    <string name="servicios_baja_item">%1$s · %2$s min · %3$s</string>
+    <string name="servicios_editar_servicio">Editar servicio</string>
+    <string name="servicios_eliminar_servicio">Eliminar servicio</string>
+    <string name="servicios_entre_5_y_480_min">Entre 5 y 480 min</string>
+    <string name="servicios_no_hay_servicios_dados_de_baja">No hay servicios dados de baja</string>
+    <string name="servicios_no_se_pudieron_cargar_los_servicios">No se pudieron cargar los servicios</string>
+    <string name="servicios_nuevo_servicio">Nuevo servicio</string>
+    <string name="servicios_precio_no_valido">Precio no válido</string>
+    <string name="servicios_quieres_eliminar_si_tiene_citas_asociadas_se">¿Quieres eliminar \'%1$s\'?\n\nSi tiene citas asociadas se dará de baja: no se podrá reservar, pero el historial se conserva.</string>
+    <string name="servicios_quieres_que_vuelva_a_poder_reservarse">¿Quieres que \'%1$s\' vuelva a poder reservarse?</string>
+    <string name="servicios_reactivar_servicio">Reactivar servicio</string>
+    <string name="servicios_servicio_actualizado">Servicio actualizado</string>
+    <string name="servicios_servicio_eliminado">Servicio eliminado</string>
+    <string name="servicios_servicio_guardado">Servicio guardado</string>
+    <string name="servicios_servicios">Servicios</string>
+    <string name="servicios_servicios_dados_de_baja">Servicios dados de baja</string>
+    <string name="servicios_vuelve_a_estar_disponible">\'%1$s\' vuelve a estar disponible</string>
+
+    <!-- Diálogos -->
+    <string name="dialogo_barbero_nombre_del_barbero">Nombre del barbero</string>
+    <string name="dialogo_servicio_duracion">Duración</string>
+    <string name="dialogo_servicio_euro">€</string>
+    <string name="dialogo_servicio_min">min</string>
+    <string name="dialogo_servicio_nombre_ej_corte_barba">Nombre (ej: Corte + Barba)</string>
+    <string name="dialogo_servicio_precio">Precio</string>
+
+    <!-- Tarjetas de las listas -->
+    <string name="item_cita_barbero_cliente">Barbero: %1$s | Cliente: %2$s</string>
+    <string name="item_cita_con">%1$s · con %2$s</string>
+    <string name="item_cita_toca_la_tarjeta_para_cancelar">Toca la tarjeta para cancelar</string>
+    <string name="item_servicio_min">%1$s min</string>
+
+    <!-- Menú de las pantallas de gestión -->
+    <string name="gestion_bajas">Bajas</string>
+</resources>

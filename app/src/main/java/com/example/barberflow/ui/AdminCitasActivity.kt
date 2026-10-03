@@ -79,7 +79,7 @@ class AdminCitasActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 progressBar.visibility = View.GONE
                 Log.e("BarberFlow", "Error obteniendo citas: ", e)
-                Toast.makeText(this@AdminCitasActivity, "Error al cargar agenda", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AdminCitasActivity, R.string.agenda_error_al_cargar_agenda, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -91,7 +91,7 @@ class AdminCitasActivity : AppCompatActivity() {
         val seleccionInicial = EstadoCita.todos.indexOf(estadoActual).coerceAtLeast(0)
 
         MaterialAlertDialogBuilder(this)
-            .setTitle("Estado de la cita de ${cita.cliente_nombre}")
+            .setTitle(getString(R.string.agenda_estado_de_la_cita_de, cita.cliente_nombre))
             .setSingleChoiceItems(opciones, seleccionInicial) { dialog, which ->
                 dialog.dismiss()
                 val nuevoEstado = EstadoCita.todos[which]
@@ -99,7 +99,7 @@ class AdminCitasActivity : AppCompatActivity() {
                     cambiarEstadoEnApi(cita.id, nuevoEstado)
                 }
             }
-            .setNegativeButton("Cerrar", null)
+            .setNegativeButton(R.string.comun_cerrar, null)
             .show()
     }
 
@@ -108,14 +108,14 @@ class AdminCitasActivity : AppCompatActivity() {
             try {
                 val respuesta = api.cambiarEstadoCita(id, EstadoUpdate(nuevoEstado))
                 if (respuesta.isSuccessful) {
-                    Toast.makeText(this@AdminCitasActivity, "Estado actualizado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AdminCitasActivity, R.string.agenda_estado_actualizado, Toast.LENGTH_SHORT).show()
                     cargarCitas()
                 } else {
                     // Por ejemplo: reactivar una cita cuyo hueco ya ocupó otro cliente
-                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(respuesta), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(this@AdminCitasActivity, respuesta), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@AdminCitasActivity, "Fallo de conexión", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AdminCitasActivity, R.string.agenda_fallo_de_conexion, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -123,13 +123,12 @@ class AdminCitasActivity : AppCompatActivity() {
     // ---------- Eliminar definitivamente (papelera) ----------
     private fun mostrarDialogoEliminarCita(cita: CitaDetalle) {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Eliminar cita")
+            .setTitle(R.string.comun_eliminar_cita)
             .setMessage(
-                "Se borrará definitivamente la cita de ${cita.cliente_nombre} ('${cita.servicio_nombre}'). " +
-                    "Si solo quieres liberar el hueco y conservar el historial, toca la tarjeta y márcala como Cancelada."
+                getString(R.string.agenda_se_borrara_definitivamente_la_cita_de_si, cita.cliente_nombre, cita.servicio_nombre)
             )
-            .setPositiveButton("Eliminar") { _, _ -> eliminarCitaEnApi(cita.id) }
-            .setNegativeButton("Volver", null)
+            .setPositiveButton(R.string.comun_eliminar) { _, _ -> eliminarCitaEnApi(cita.id) }
+            .setNegativeButton(R.string.comun_volver, null)
             .show()
     }
 
@@ -138,13 +137,13 @@ class AdminCitasActivity : AppCompatActivity() {
             try {
                 val respuesta = api.eliminarCita(id)
                 if (respuesta.isSuccessful) {
-                    Toast.makeText(this@AdminCitasActivity, "Cita eliminada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AdminCitasActivity, R.string.agenda_cita_eliminada, Toast.LENGTH_SHORT).show()
                     cargarCitas()
                 } else {
-                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(respuesta), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@AdminCitasActivity, mensajeDeError(this@AdminCitasActivity, respuesta), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@AdminCitasActivity, "Error al eliminar la cita: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@AdminCitasActivity, getString(R.string.agenda_error_al_eliminar_la_cita, e.message), Toast.LENGTH_LONG).show()
             }
         }
     }

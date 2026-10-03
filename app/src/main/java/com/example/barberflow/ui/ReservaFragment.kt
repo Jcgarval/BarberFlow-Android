@@ -218,7 +218,7 @@ class ReservaFragment : Fragment(R.layout.fragment_reserva) {
                             // Llevamos al usuario a Inicio para que vea su cita como "próxima cita"
                             (activity as? MainActivity)?.irA(R.id.nav_inicio)
                         } else {
-                            Toast.makeText(requireContext(), mensajeDeError(response), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), mensajeDeError(requireContext(), response), Toast.LENGTH_LONG).show()
                             // Si la hora se ocupó mientras elegías, refrescamos las franjas
                             if (response.code() == 400) cargarFranjas()
                         }

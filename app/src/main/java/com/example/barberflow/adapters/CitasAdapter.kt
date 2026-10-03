@@ -32,7 +32,7 @@ class CitasAdapter(
         val cita = listaCitas[position]
 
         holder.tvFecha.text = formatearFechaHora(cita.fecha_hora)
-        holder.tvDetalles.text = "${cita.servicio.nombre} · con ${cita.barbero.nombre}"
+        holder.tvDetalles.text = holder.itemView.context.getString(R.string.item_cita_con, cita.servicio.nombre, cita.barbero.nombre)
         aplicarBadgeEstado(holder.tvEstado, cita.estado)
 
         val seCancela = EstadoCita.sePuedeCancelar(cita.estado)
