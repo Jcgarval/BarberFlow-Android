@@ -33,14 +33,6 @@ object EstadoCita {
         }
     )
 
-    @Deprecated("Usa etiqueta(context, estado): lee el texto de strings.xml", ReplaceWith("etiqueta(context, estado)"))
-    fun etiqueta(estado: String?): String = when (estado) {
-        CONFIRMADA -> "Confirmada"
-        COMPLETADA -> "Completada"
-        CANCELADA -> "Cancelada"
-        else -> "Pendiente"
-    }
-
     @ColorRes
     fun color(estado: String?): Int = when (estado) {
         CONFIRMADA -> R.color.bf_estado_confirmada
@@ -90,27 +82,6 @@ fun mensajeDeError(context: Context, response: Response<*>): String {
 fun mensajeDeError(context: Context, e: HttpException): String {
     val respuesta = e.response()
     return if (respuesta != null) mensajeDeError(context, respuesta) else context.getString(R.string.error_servidor, e.code())
-}
-
-@Deprecated("Usa mensajeDeError(context, response): lee los textos de strings.xml", ReplaceWith("mensajeDeError(context, response)"))
-fun mensajeDeError(response: Response<*>): String {
-    val detalle = try {
-        JSONObject(response.errorBody()?.string() ?: "").optString("detail")
-    } catch (e: Exception) {
-        ""
-    }
-    return when {
-        detalle.isNotBlank() && !detalle.startsWith("[") -> detalle
-        response.code() == 422 -> "Datos no válidos. Revisa los campos."
-        response.code() == 401 -> "Tu sesión ha caducado. Vuelve a iniciar sesión."
-        else -> "Error del servidor: ${response.code()}"
-    }
-}
-
-@Deprecated("Usa mensajeDeError(context, e): lee los textos de strings.xml", ReplaceWith("mensajeDeError(context, e)"))
-fun mensajeDeError(e: HttpException): String {
-    val respuesta = e.response()
-    return if (respuesta != null) mensajeDeError(respuesta) else "Error del servidor: ${e.code()}"
 }
 
 /** Admite "15.50" y "15,50" (en español el teclado suele poner la coma). Devuelve null si no es un número válido. */

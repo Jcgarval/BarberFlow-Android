@@ -21,7 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
-/** Historial de citas del cliente (lo que antes era HistorialActivity). */
+/** Citas del cliente: las próximas primero y el resto del historial; permite cancelar. */
 class CitasFragment : Fragment(R.layout.fragment_citas) {
 
     private val api by lazy { RetrofitClient.getApi(requireContext()) }

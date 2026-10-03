@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
                             putString("ROL", respuesta.rol)
                             putInt("CLIENTE_ID", respuesta.id)
                             putString("CLIENTE_NOMBRE", respuesta.nombre)
+                            putString("CLIENTE_EMAIL", email)
                             apply()
                         }
 

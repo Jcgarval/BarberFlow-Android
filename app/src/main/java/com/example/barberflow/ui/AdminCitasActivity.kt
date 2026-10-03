@@ -87,7 +87,7 @@ class AdminCitasActivity : AppCompatActivity() {
     // ---------- Cambiar estado (tocar la tarjeta) ----------
     private fun mostrarDialogoCambiarEstado(cita: CitaDetalle) {
         val estadoActual = cita.estado ?: EstadoCita.PENDIENTE
-        val opciones = EstadoCita.todos.map { EstadoCita.etiqueta(it) }.toTypedArray()
+        val opciones = EstadoCita.todos.map { EstadoCita.etiqueta(this@AdminCitasActivity, it) }.toTypedArray()
         val seleccionInicial = EstadoCita.todos.indexOf(estadoActual).coerceAtLeast(0)
 
         MaterialAlertDialogBuilder(this)

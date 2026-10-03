@@ -21,6 +21,11 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         view.findViewById<TextView>(R.id.tv_perfil_nombre).text = nombre
         view.findViewById<TextView>(R.id.tv_perfil_inicial).text = nombre.take(1).uppercase()
 
+        // El correo se guarda al iniciar sesión; si la sesión es anterior a este cambio, simplemente no se muestra
+        val correo = preferencias.getString("CLIENTE_EMAIL", "")?.trim().orEmpty()
+        val textoCorreo = view.findViewById<TextView>(R.id.tv_perfil_email)
+        if (correo.isBlank()) textoCorreo.visibility = View.GONE else textoCorreo.text = correo
+
         // Versión de la app (si no se puede leer, simplemente no se muestra)
         val versionTexto = view.findViewById<TextView>(R.id.tv_perfil_version)
         try {

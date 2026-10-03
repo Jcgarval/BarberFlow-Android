@@ -85,10 +85,6 @@ interface BarberiaApi {
     @POST("/servicios/{servicio_id}/reactivar")
     suspend fun reactivarServicio(@Path("servicio_id") servicioId: Int): Servicio
 
-    // Gestión de Citas Generales
-    @GET("/citas/")
-    suspend fun obtenerTodasLasCitas(): List<Cita>
-
     @GET("/admin/citas/detalles")
     suspend fun obtenerCitasDetalladas(): List<CitaDetalle>
 }
