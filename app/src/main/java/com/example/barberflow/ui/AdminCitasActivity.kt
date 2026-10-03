@@ -19,6 +19,7 @@ import com.example.barberflow.models.CitaDetalle
 import com.example.barberflow.models.EstadoCita
 import com.example.barberflow.models.EstadoUpdate
 import com.example.barberflow.models.mensajeDeError
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -40,6 +41,8 @@ class AdminCitasActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        findViewById<MaterialToolbar>(R.id.toolbar_agenda).setNavigationOnClickListener { finish() }
 
         rvCitas = findViewById(R.id.rv_citas)
         progressBar = findViewById(R.id.progressBar)

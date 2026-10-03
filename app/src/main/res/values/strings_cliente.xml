@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Navegación inferior -->
+    <string name="nav_inicio">Inicio</string>
+    <string name="nav_reservar">Reservar</string>
+    <string name="nav_citas">Mis citas</string>
+    <string name="nav_perfil">Perfil</string>
+
+    <!-- Inicio -->
+    <string name="home_saludo">Hola, %1$s</string>
+    <string name="home_saludo_sin_nombre">Hola</string>
+    <string name="home_subtitulo">Esto es lo que tienes pendiente</string>
+    <string name="home_proxima_titulo">Tu próxima cita</string>
+    <string name="home_con_barbero">con %1$s</string>
+    <string name="home_hoy">Hoy</string>
+    <string name="home_manana">Mañana</string>
+    <string name="home_en_dias">En %1$d días</string>
+    <string name="home_sin_cita_titulo">No tienes citas próximas</string>
+    <string name="home_sin_cita_texto">Reserva tu hueco en unos segundos: eliges barbero, servicio y hora.</string>
+    <string name="home_accion_reservar">Reservar cita</string>
+    <string name="home_accion_citas">Mis citas</string>
+    <string name="home_horario_titulo">Horario</string>
+    <string name="home_horario_texto">Lunes a sábado · 09:00 – 20:00\nDomingos cerrado</string>
+    <string name="home_error_carga">No se pudieron cargar tus citas. Desliza hacia otra pestaña y vuelve para reintentar.</string>
+
+    <!-- Reservar -->
+    <string name="reserva_titulo">Reserva tu cita</string>
+    <string name="reserva_subtitulo">Elige barbero, servicio y cuándo quieres venir</string>
+    <string name="reserva_barbero">Tu barbero</string>
+    <string name="reserva_servicio">Servicio</string>
+    <string name="reserva_fecha_hora">Fecha y hora</string>
+    <string name="reserva_seleccionar_fecha">Seleccionar fecha</string>
+    <string name="reserva_confirmar">Confirmar reserva</string>
+    <string name="reserva_elige_dia">Elige primero un día</string>
+    <string name="reserva_elige_hora">Elige una hora libre</string>
+    <string name="reserva_espera_datos">Espera a que carguen los datos</string>
+    <string name="reserva_error_usuario">Error crítico: usuario no registrado</string>
+    <string name="reserva_ok">¡Cita reservada con éxito, %1$s!</string>
+    <string name="reserva_domingos">Cerramos los domingos. Por favor, elige otro día.</string>
+    <string name="reserva_sin_franjas">No quedan horas libres ese día. Prueba con otro día, barbero o servicio.</string>
+    <string name="reserva_info_franjas">Elige una hora (%1$s, %2$d min)</string>
+    <string name="reserva_error_datos">Error al cargar datos del servidor</string>
+    <string name="reserva_sesion_caducada">Tu sesión ha caducado. Vuelve a iniciar sesión.</string>
+    <string name="reserva_error_franjas">No se pudieron cargar las horas (error %1$d)</string>
+    <string name="reserva_error_conexion_franjas">Fallo de conexión al cargar las horas</string>
+    <string name="reserva_error_conexion">Fallo de conexión: %1$s</string>
+
+    <!-- Mis citas -->
+    <string name="citas_titulo">Mis citas</string>
+    <string name="citas_vacio">Aún no tienes citas.\nReserva la primera desde la pestaña Reservar.</string>
+    <string name="citas_cancelar_titulo">Cancelar cita</string>
+    <string name="citas_cancelar_mensaje">¿Quieres cancelar tu cita de %1$s con %2$s el %3$s?</string>
+    <string name="citas_cancelar_si">Sí, cancelar</string>
+    <string name="citas_volver">Volver</string>
+    <string name="citas_cancelada">Cita cancelada</string>
+    <string name="citas_ya_estado">Esta cita ya está %1$s</string>
+    <string name="citas_error_carga">No se pudo descargar el historial</string>
+    <string name="citas_error_usuario">Error: usuario no identificado</string>
+    <string name="error_conexion_corto">Fallo de conexión</string>
+
+    <!-- Perfil -->
+    <string name="perfil_titulo">Perfil</string>
+    <string name="perfil_rol_cliente">Cliente</string>
+    <string name="perfil_cerrar_sesion">Cerrar sesión</string>
+    <string name="perfil_sesion_cerrada">Sesión cerrada</string>
+    <string name="perfil_version">BarberFlow · versión %1$s</string>
+</resources>

@@ -1,198 +1,260 @@
 package com.example.barberflow.ui
 
-import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.launch
 import com.example.barberflow.R
 import com.example.barberflow.adapters.ServicioAdapter
 import com.example.barberflow.api.RetrofitClient
 import com.example.barberflow.models.Servicio
 import com.example.barberflow.models.ServicioCreate
+import com.example.barberflow.models.formatearPrecio
+import com.example.barberflow.models.mensajeDeError
+import com.example.barberflow.models.parsearDecimal
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.util.Locale
 
 class GestionServiciosActivity : AppCompatActivity() {
 
+    private val api by lazy { RetrofitClient.getApi(this) }
     private lateinit var rvServicios: RecyclerView
     private lateinit var adapter: ServicioAdapter
-    private lateinit var fabAddServicio: FloatingActionButton
+    private lateinit var fabAddServicio: ExtendedFloatingActionButton
+    private lateinit var tvVacio: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gestion_servicios)
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.root_gestion_servicios)) { v, insets ->
+            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(barras.left, barras.top, barras.right, barras.bottom)
+            insets
+        }
+
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar_servicios)
+        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.inflateMenu(R.menu.menu_gestion)
+        toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.action_bajas) {
+                mostrarBajas()
+                true
+            } else {
+                false
+            }
+        }
+
         rvServicios = findViewById(R.id.rvServicios)
         fabAddServicio = findViewById(R.id.fabAddServicio)
+        tvVacio = findViewById(R.id.tvVacioServicios)
 
         rvServicios.layoutManager = LinearLayoutManager(this)
-
         adapter = ServicioAdapter(
             servicios = emptyList(),
-            onEditClick = { servicio -> mostrarDialogoEditar(servicio) },
+            onEditClick = { servicio -> mostrarDialogoServicio(servicio) },
             onDeleteClick = { servicio -> mostrarDialogoEliminar(servicio) }
         )
         rvServicios.adapter = adapter
 
-        cargarServicios()
+        fabAddServicio.setOnClickListener { mostrarDialogoServicio(null) }
 
-        fabAddServicio.setOnClickListener {
-            mostrarDialogoCrearServicio()
-        }
+        cargarServicios()
+    }
+
+    private fun avisar(mensaje: String) {
+        Snackbar.make(findViewById(R.id.root_gestion_servicios), mensaje, Snackbar.LENGTH_LONG)
+            .setAnchorView(fabAddServicio)
+            .show()
     }
 
     private fun cargarServicios() {
-        val api = RetrofitClient.getApi(this)
         lifecycleScope.launch {
             try {
                 val lista = api.obtenerServicios()
                 adapter.actualizarLista(lista)
+                tvVacio.visibility = if (lista.isEmpty()) View.VISIBLE else View.GONE
             } catch (e: Exception) {
-                Toast.makeText(this@GestionServiciosActivity, "Error al cargar: ${e.message}", Toast.LENGTH_LONG).show()
+                avisar("No se pudieron cargar los servicios")
             }
         }
     }
 
-    // --- FUNCIONES DE CREACIÓN ---
-    private fun mostrarDialogoCrearServicio() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Añadir Nuevo Servicio")
+    // ---------- Crear y editar (mismo diálogo) ----------
+    private fun mostrarDialogoServicio(servicio: Servicio?) {
+        val vista = layoutInflater.inflate(R.layout.dialog_servicio, null)
+        val campoNombre = vista.findViewById<TextInputLayout>(R.id.til_nombre_servicio)
+        val campoDuracion = vista.findViewById<TextInputLayout>(R.id.til_duracion_servicio)
+        val campoPrecio = vista.findViewById<TextInputLayout>(R.id.til_precio_servicio)
+        val nombre = vista.findViewById<TextInputEditText>(R.id.et_nombre_servicio)
+        val duracion = vista.findViewById<TextInputEditText>(R.id.et_duracion_servicio)
+        val precio = vista.findViewById<TextInputEditText>(R.id.et_precio_servicio)
 
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        layout.setPadding(50, 40, 50, 10)
-
-        val inputNombre = EditText(this).apply { hint = "Nombre (ej: Corte + Barba)" }
-        val inputDuracion = EditText(this).apply {
-            hint = "Duración en min (ej: 45)"
-            setInputType(android.text.InputType.TYPE_CLASS_NUMBER)
+        if (servicio != null) {
+            nombre.setText(servicio.nombre)
+            duracion.setText(servicio.duracion_minutos.toString())
+            precio.setText(String.format(Locale.US, "%.2f", servicio.precio))
         }
-        val inputPrecio = EditText(this).apply {
-            hint = "Precio (ej: 15.50)"
-            setInputType(android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        }
+        nombre.doAfterTextChanged { campoNombre.error = null }
+        duracion.doAfterTextChanged { campoDuracion.error = null }
+        precio.doAfterTextChanged { campoPrecio.error = null }
 
-        layout.addView(inputNombre)
-        layout.addView(inputDuracion)
-        layout.addView(inputPrecio)
-        builder.setView(layout)
+        val dialogo = MaterialAlertDialogBuilder(this)
+            .setTitle(if (servicio == null) "Nuevo servicio" else "Editar servicio")
+            .setView(vista)
+            .setPositiveButton(if (servicio == null) "Guardar" else "Actualizar", null)
+            .setNegativeButton("Cancelar", null)
+            .create()
 
-        builder.setPositiveButton("Guardar") { dialog, _ ->
-            val nombre = inputNombre.text.toString().trim()
-            val duracion = inputDuracion.text.toString().toIntOrNull()
-            val precio = inputPrecio.text.toString().toDoubleOrNull()
+        dialogo.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialogo.setOnShowListener {
+            nombre.requestFocus()
+            dialogo.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val textoNombre = nombre.text.toString().trim()
+                val minutos = duracion.text.toString().trim().toIntOrNull()
+                val euros = parsearDecimal(precio.text.toString())
 
-            if (nombre.isNotEmpty() && duracion != null && precio != null) {
-                crearServicioEnApi(nombre, duracion, precio)
-            } else {
-                Toast.makeText(this, "Por favor rellena todos los campos correctamente", Toast.LENGTH_SHORT).show()
+                var valido = true
+                if (textoNombre.isEmpty()) {
+                    campoNombre.error = "Escribe un nombre"; valido = false
+                } else if (textoNombre.length > 60) {
+                    campoNombre.error = "Máximo 60 caracteres"; valido = false
+                }
+                if (minutos == null || minutos < 5 || minutos > 480) {
+                    campoDuracion.error = "Entre 5 y 480 min"; valido = false
+                }
+                if (euros == null || euros < 0 || euros > 1000) {
+                    campoPrecio.error = "Precio no válido"; valido = false
+                }
+                if (!valido || minutos == null || euros == null) return@setOnClickListener
+
+                dialogo.dismiss()
+                if (servicio == null) {
+                    crearServicioEnApi(textoNombre, minutos, euros)
+                } else {
+                    actualizarServicioEnApi(servicio.id, textoNombre, minutos, euros)
+                }
             }
-            dialog.dismiss()
         }
-
-        builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
-        builder.show()
+        dialogo.show()
     }
 
     private fun crearServicioEnApi(nombre: String, duracion: Int, precio: Double) {
-        val api = RetrofitClient.getApi(this)
         lifecycleScope.launch {
             try {
-                val peticion = ServicioCreate(nombre, duracion, precio)
-                api.crearServicio(peticion)
-                Toast.makeText(this@GestionServiciosActivity, "Servicio guardado", Toast.LENGTH_SHORT).show()
+                api.crearServicio(ServicioCreate(nombre, duracion, precio))
+                avisar("Servicio guardado")
                 cargarServicios()
+            } catch (e: HttpException) {
+                avisar(mensajeDeError(e))
             } catch (e: Exception) {
-                Toast.makeText(this@GestionServiciosActivity, "Error al crear: ${e.message}", Toast.LENGTH_LONG).show()
+                avisar("No se pudo conectar con el servidor")
             }
         }
-    }
-
-    // --- FUNCIONES DE ELIMINACIÓN ---
-    private fun mostrarDialogoEliminar(servicio: Servicio) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Eliminar Servicio")
-        builder.setMessage("¿Estás seguro de que quieres eliminar '${servicio.nombre}'?")
-
-        builder.setPositiveButton("Eliminar") { dialog, _ ->
-            eliminarServicioEnApi(servicio.id)
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
-        builder.show()
-    }
-
-    private fun eliminarServicioEnApi(id: Int) {
-        val api = RetrofitClient.getApi(this)
-        lifecycleScope.launch {
-            try {
-                api.eliminarServicio(id)
-                Toast.makeText(this@GestionServiciosActivity, "Servicio eliminado", Toast.LENGTH_SHORT).show()
-                cargarServicios()
-            } catch (e: Exception) {
-                Toast.makeText(this@GestionServiciosActivity, "Error al eliminar: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    // --- FUNCIONES DE EDICIÓN ---
-    private fun mostrarDialogoEditar(servicio: Servicio) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Editar Servicio")
-
-        val layout = LinearLayout(this)
-        layout.orientation = LinearLayout.VERTICAL
-        layout.setPadding(50, 40, 50, 10)
-
-        val inputNombre = EditText(this).apply { setText(servicio.nombre) }
-        val inputDuracion = EditText(this).apply {
-            // CORRECCIÓN: Usamos duracion_minutos
-            setText(servicio.duracion_minutos.toString())
-            setInputType(android.text.InputType.TYPE_CLASS_NUMBER)
-        }
-        val inputPrecio = EditText(this).apply {
-            setText(servicio.precio.toString())
-            setInputType(android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL)
-        }
-
-        layout.addView(inputNombre)
-        layout.addView(inputDuracion)
-        layout.addView(inputPrecio)
-        builder.setView(layout)
-
-        builder.setPositiveButton("Actualizar") { dialog, _ ->
-            val nombre = inputNombre.text.toString().trim()
-            val duracion = inputDuracion.text.toString().toIntOrNull()
-            val precio = inputPrecio.text.toString().toDoubleOrNull()
-
-            if (nombre.isNotEmpty() && duracion != null && precio != null) {
-                actualizarServicioEnApi(servicio.id, nombre, duracion, precio)
-            } else {
-                Toast.makeText(this, "Datos inválidos", Toast.LENGTH_SHORT).show()
-            }
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
-        builder.show()
     }
 
     private fun actualizarServicioEnApi(id: Int, nombre: String, duracion: Int, precio: Double) {
-        val api = RetrofitClient.getApi(this)
         lifecycleScope.launch {
             try {
-                val peticion = ServicioCreate(nombre, duracion, precio)
-                api.actualizarServicio(id, peticion)
-                Toast.makeText(this@GestionServiciosActivity, "Servicio actualizado", Toast.LENGTH_SHORT).show()
+                api.actualizarServicio(id, ServicioCreate(nombre, duracion, precio))
+                avisar("Servicio actualizado")
                 cargarServicios()
+            } catch (e: HttpException) {
+                avisar(mensajeDeError(e))
             } catch (e: Exception) {
-                Toast.makeText(this@GestionServiciosActivity, "Error al actualizar: ${e.message}", Toast.LENGTH_LONG).show()
+                avisar("No se pudo conectar con el servidor")
+            }
+        }
+    }
+
+    // ---------- Eliminar ----------
+    private fun mostrarDialogoEliminar(servicio: Servicio) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Eliminar servicio")
+            .setMessage(
+                "¿Quieres eliminar '${servicio.nombre}'?\n\n" +
+                    "Si tiene citas asociadas se dará de baja: no se podrá reservar, pero el historial se conserva."
+            )
+            .setPositiveButton("Eliminar") { _, _ -> eliminarServicioEnApi(servicio.id) }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun eliminarServicioEnApi(id: Int) {
+        lifecycleScope.launch {
+            try {
+                val respuesta = api.eliminarServicio(id)
+                if (respuesta.isSuccessful) {
+                    avisar(respuesta.body()?.mensaje ?: "Servicio eliminado")
+                    cargarServicios()
+                } else {
+                    avisar(mensajeDeError(respuesta))
+                }
+            } catch (e: Exception) {
+                avisar("No se pudo conectar con el servidor")
+            }
+        }
+    }
+
+    // ---------- Servicios dados de baja: ver y reactivar ----------
+    private fun mostrarBajas() {
+        lifecycleScope.launch {
+            try {
+                val bajas = api.obtenerServiciosInactivos()
+                if (bajas.isEmpty()) {
+                    avisar("No hay servicios dados de baja")
+                    return@launch
+                }
+                val opciones = bajas
+                    .map { "${it.nombre} · ${it.duracion_minutos} min · ${formatearPrecio(it.precio)}" }
+                    .toTypedArray()
+                MaterialAlertDialogBuilder(this@GestionServiciosActivity)
+                    .setTitle("Servicios dados de baja")
+                    .setItems(opciones) { _, posicion -> confirmarReactivacion(bajas[posicion]) }
+                    .setNegativeButton("Cerrar", null)
+                    .show()
+            } catch (e: HttpException) {
+                avisar(mensajeDeError(e))
+            } catch (e: Exception) {
+                avisar("No se pudo conectar con el servidor")
+            }
+        }
+    }
+
+    private fun confirmarReactivacion(servicio: Servicio) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Reactivar servicio")
+            .setMessage("¿Quieres que '${servicio.nombre}' vuelva a poder reservarse?")
+            .setPositiveButton("Reactivar") { _, _ -> reactivarServicioEnApi(servicio.id) }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun reactivarServicioEnApi(id: Int) {
+        lifecycleScope.launch {
+            try {
+                val servicio = api.reactivarServicio(id)
+                avisar("'${servicio.nombre}' vuelve a estar disponible")
+                cargarServicios()
+            } catch (e: HttpException) {
+                avisar(mensajeDeError(e))
+            } catch (e: Exception) {
+                avisar("No se pudo conectar con el servidor")
             }
         }
     }

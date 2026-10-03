@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.barberflow.R
 import com.example.barberflow.models.Servicio
+import com.example.barberflow.models.formatearPrecio
 
 class ServicioAdapter(
     private var servicios: List<Servicio>,
@@ -18,6 +19,7 @@ class ServicioAdapter(
     class ServicioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvNombre: TextView = itemView.findViewById(R.id.tvNombreServicio)
         val tvDetalles: TextView = itemView.findViewById(R.id.tvDetallesServicio)
+        val tvPrecio: TextView = itemView.findViewById(R.id.tvPrecioServicio)
         val btnEditar: ImageButton = itemView.findViewById(R.id.btnEditarServicio)
         val btnEliminar: ImageButton = itemView.findViewById(R.id.btnEliminarServicio)
     }
@@ -32,11 +34,23 @@ class ServicioAdapter(
         val servicio = servicios[position]
 
         holder.tvNombre.text = servicio.nombre
-        // CORRECCIÓN: Usamos duracion_minutos
-        holder.tvDetalles.text = "${servicio.duracion_minutos} min - ${servicio.precio}€"
+        holder.tvDetalles.text = "${servicio.duracion_minutos} min"
+        holder.tvPrecio.text = formatearPrecio(servicio.precio)
 
         holder.btnEditar.setOnClickListener { onEditClick(servicio) }
         holder.btnEliminar.setOnClickListener { onDeleteClick(servicio) }
+    }
+
+    private var recycler: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recycler = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        recycler = null
     }
 
     override fun getItemCount(): Int = servicios.size
@@ -44,5 +58,6 @@ class ServicioAdapter(
     fun actualizarLista(nuevaLista: List<Servicio>) {
         servicios = nuevaLista
         notifyDataSetChanged()
+        recycler?.scheduleLayoutAnimation()
     }
 }

@@ -61,7 +61,13 @@ interface BarberiaApi {
     suspend fun actualizarBarbero(@Path("barbero_id") barberoId: Int, @Body barbero: BarberoCreate): BarberoResponse
 
     @DELETE("/barberos/{barbero_id}")
-    suspend fun eliminarBarbero(@Path("barbero_id") barberoId: Int): Response<Unit>
+    suspend fun eliminarBarbero(@Path("barbero_id") barberoId: Int): Response<MensajeResponse>
+
+    @GET("/barberos/inactivos")
+    suspend fun obtenerBarberosInactivos(): List<Barbero>
+
+    @POST("/barberos/{barbero_id}/reactivar")
+    suspend fun reactivarBarbero(@Path("barbero_id") barberoId: Int): Barbero
 
     // Gestión de Servicios
     @POST("/servicios/")
@@ -71,7 +77,13 @@ interface BarberiaApi {
     suspend fun actualizarServicio(@Path("servicio_id") servicioId: Int, @Body servicio: ServicioCreate): ServicioResponse
 
     @DELETE("/servicios/{servicio_id}")
-    suspend fun eliminarServicio(@Path("servicio_id") servicioId: Int): Response<Unit>
+    suspend fun eliminarServicio(@Path("servicio_id") servicioId: Int): Response<MensajeResponse>
+
+    @GET("/servicios/inactivos")
+    suspend fun obtenerServiciosInactivos(): List<Servicio>
+
+    @POST("/servicios/{servicio_id}/reactivar")
+    suspend fun reactivarServicio(@Path("servicio_id") servicioId: Int): Servicio
 
     // Gestión de Citas Generales
     @GET("/citas/")

@@ -6,8 +6,11 @@ import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.example.barberflow.R
 import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 /** Estados posibles de una cita (deben coincidir con los del backend). */
@@ -65,7 +68,66 @@ fun mensajeDeError(response: Response<*>): String {
     }
     return when {
         detalle.isNotBlank() && !detalle.startsWith("[") -> detalle
+        response.code() == 422 -> "Datos no válidos. Revisa los campos."
         response.code() == 401 -> "Tu sesión ha caducado. Vuelve a iniciar sesión."
         else -> "Error del servidor: ${response.code()}"
     }
+}
+
+/** Igual que mensajeDeError(response), pero para cuando Retrofit lanza HttpException (llamadas que devuelven el objeto directamente). */
+fun mensajeDeError(e: HttpException): String {
+    val respuesta = e.response()
+    return if (respuesta != null) mensajeDeError(respuesta) else "Error del servidor: ${e.code()}"
+}
+
+/** Admite "15.50" y "15,50" (en español el teclado suele poner la coma). Devuelve null si no es un número válido. */
+fun parsearDecimal(texto: String): Double? =
+    texto.trim().replace(',', '.').toDoubleOrNull()?.takeIf { it.isFinite() }
+
+/** 12.5 -> "12,50 €" */
+fun formatearPrecio(precio: Double): String =
+    String.format(Locale.forLanguageTag("es-ES"), "%.2f €", precio)
+
+// ---------- Fechas para la pantalla de inicio ----------
+private val LOCALE_ES: Locale = Locale.forLanguageTag("es-ES")
+private const val FORMATO_ISO = "yyyy-MM-dd'T'HH:mm:ss"
+
+private fun parsearFechaIso(fechaIso: String): Date? = try {
+    SimpleDateFormat(FORMATO_ISO, Locale.US).parse(fechaIso)
+} catch (e: Exception) {
+    null
+}
+
+/** "2026-10-03T10:00:00" -> "Sábado 3 de octubre" */
+fun formatearDiaLargo(fechaIso: String): String {
+    val fecha = parsearFechaIso(fechaIso) ?: return fechaIso
+    return SimpleDateFormat("EEEE d 'de' MMMM", LOCALE_ES).format(fecha).replaceFirstChar { it.uppercase() }
+}
+
+/** "2026-10-03T10:00:00" -> "10:00" */
+fun formatearHora(fechaIso: String): String {
+    val fecha = parsearFechaIso(fechaIso) ?: return fechaIso
+    return SimpleDateFormat("HH:mm", Locale.US).format(fecha)
+}
+
+/** Días naturales que faltan hasta la fecha (0 = hoy, 1 = mañana). Null si la fecha no se entiende. */
+fun diasHasta(fechaIso: String): Int? {
+    val fecha = parsearFechaIso(fechaIso) ?: return null
+    fun inicioDelDia(c: Calendar): Long {
+        c.set(Calendar.HOUR_OF_DAY, 0)
+        c.set(Calendar.MINUTE, 0)
+        c.set(Calendar.SECOND, 0)
+        c.set(Calendar.MILLISECOND, 0)
+        return c.timeInMillis
+    }
+    val destino = inicioDelDia(Calendar.getInstance().apply { time = fecha })
+    val hoy = inicioDelDia(Calendar.getInstance())
+    return Math.round((destino - hoy) / 86_400_000.0).toInt() // el redondeo absorbe los días de 23 o 25 h del cambio de hora
+}
+
+/** ¿La cita está activa (pendiente o confirmada) y todavía no ha pasado? */
+fun esCitaProxima(cita: Cita): Boolean {
+    val activa = cita.estado == null || cita.estado == EstadoCita.PENDIENTE || cita.estado == EstadoCita.CONFIRMADA
+    val ahora = SimpleDateFormat(FORMATO_ISO, Locale.US).format(Date())
+    return activa && cita.fecha_hora >= ahora
 }

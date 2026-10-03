@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_inicio"
+        android:icon="@drawable/ic_nav_inicio"
+        android:title="@string/nav_inicio" />
+    <item
+        android:id="@+id/nav_reservar"
+        android:icon="@drawable/ic_nav_reservar"
+        android:title="@string/nav_reservar" />
+    <item
+        android:id="@+id/nav_citas"
+        android:icon="@drawable/ic_nav_citas"
+        android:title="@string/nav_citas" />
+    <item
+        android:id="@+id/nav_perfil"
+        android:icon="@drawable/ic_nav_perfil"
+        android:title="@string/nav_perfil" />
+</menu>

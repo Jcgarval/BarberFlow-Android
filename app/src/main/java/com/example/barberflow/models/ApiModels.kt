@@ -12,6 +12,9 @@ data class BarberoResponse(val id: Int, val nombre: String)
 data class ServicioCreate(val nombre: String, val duracion_minutos: Int, val precio: Double)
 data class ServicioResponse(val id: Int, val nombre: String, val duracion_minutos: Int, val precio: Double)
 
+// Respuesta de los DELETE de barberos y servicios: {"mensaje": "..."}
+data class MensajeResponse(val mensaje: String)
+
 // Citas (vista detallada del administrador)
 data class CitaDetalle(
     val id: Int,

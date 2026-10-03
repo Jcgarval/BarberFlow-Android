@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Acción de texto en la barra superior: abre la lista de elementos dados de baja -->
+    <item
+        android:id="@+id/action_bajas"
+        android:title="Bajas"
+        app:showAsAction="always" />
+</menu>

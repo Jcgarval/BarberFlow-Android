@@ -30,9 +30,6 @@
             android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.HistorialActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.AdminActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

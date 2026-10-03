@@ -42,10 +42,23 @@ class CitasAdapter(
         holder.itemView.setOnClickListener { onCitaClick(cita) }
     }
 
+    private var recycler: RecyclerView? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recycler = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        recycler = null
+    }
+
     override fun getItemCount(): Int = listaCitas.size
 
     fun actualizarLista(nuevaLista: List<Cita>) {
         listaCitas = nuevaLista
         notifyDataSetChanged()
+        recycler?.scheduleLayoutAnimation()
     }
 }

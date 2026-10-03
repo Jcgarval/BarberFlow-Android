@@ -6,6 +6,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
@@ -13,11 +15,22 @@ import kotlinx.coroutines.launch
 import com.example.barberflow.R
 import com.example.barberflow.api.RetrofitClient
 import com.example.barberflow.models.ClienteCreate
+import com.example.barberflow.models.mensajeDeError
+import com.google.android.material.appbar.MaterialToolbar
+import retrofit2.HttpException
 
 class RegistroActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
+
+        // Que el contenido no quede bajo la barra de estado en Android recientes
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content)) { v, insets ->
+            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(barras.left, barras.top, barras.right, barras.bottom)
+            insets
+        }
+        findViewById<MaterialToolbar>(R.id.toolbar_registro).setNavigationOnClickListener { finish() }
 
         val etNombre = findViewById<EditText>(R.id.et_registro_nombre)
         val etEmail = findViewById<EditText>(R.id.et_registro_email)
@@ -50,7 +63,8 @@ class RegistroActivity : AppCompatActivity() {
                         Log.e("BarberFlowError", "Fallo exacto al registrar: ", e)
 
                         // Esto te lo mostrará en el móvil
-                        Toast.makeText(this@RegistroActivity, "Error real: ${e.message}", Toast.LENGTH_LONG).show()
+                        val mensaje = if (e is HttpException) mensajeDeError(e) else "No se pudo conectar con el servidor"
+                        Toast.makeText(this@RegistroActivity, mensaje, Toast.LENGTH_LONG).show()
 
                         btnRegistrar.isEnabled = true
                         btnRegistrar.text = "Registrarme"
