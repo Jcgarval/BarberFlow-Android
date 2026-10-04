@@ -59,7 +59,7 @@ app/src/main/java/com/example/barberflow/
 ### Decisiones técnicas
 - **Una sola actividad principal con navegación inferior** y fragments que se muestran u ocultan, para conservar el estado de cada sección al cambiar de pestaña.
 - **Sesión con JWT:** el token se guarda en `SharedPreferences` y un interceptor de OkHttp lo añade a cada petición.
-- **Horas libres calculadas en el servidor**, de modo que la app nunca ofrece huecos ocupados y las reglas viven en un único sitio.
+- **Horas libres calculadas en el servidor**, de modo que la app nunca ofrece huecos ocupados y las reglas (horarios, solapes, días de cierre) viven en un único sitio, cubiertas por las pruebas automáticas del backend.
 - **Peticiones asíncronas con corrutinas** (`lifecycleScope`), cancelando la consulta anterior cuando el usuario cambia de opción.
 - **Material 3 con tema claro y oscuro**, colores definidos en el tema (nada de colores fijos en los layouts).
 - **Textos en `strings.xml`**, listos para traducir.
@@ -97,7 +97,6 @@ app/src/main/java/com/example/barberflow/
 
 ## Próximas mejoras
 
-- Restringir también en el servidor los días de cierre (hoy solo lo impide la app).
 - Recordatorios de cita con notificaciones.
 - Pruebas automáticas de interfaz.
 
