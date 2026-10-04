@@ -34,8 +34,6 @@ Cliente móvil del ecosistema **BarberFlow**. Se comunica por REST con un backen
 
 ## Capturas
 
-<!--
-  Cuando tengas las capturas, guárdalas en docs/capturas/ y descomenta este bloque:
 
 <p align="center">
   <img src="docs/capturas/inicio.png" width="22%" alt="Inicio">
@@ -43,7 +41,7 @@ Cliente móvil del ecosistema **BarberFlow**. Se comunica por REST con un backen
   <img src="docs/capturas/mis-citas.png" width="22%" alt="Mis citas">
   <img src="docs/capturas/admin.png" width="22%" alt="Panel de administrador">
 </p>
--->
+
 
 ## Arquitectura
 
@@ -72,10 +70,11 @@ app/src/main/java/com/example/barberflow/
 - Corrutinas de Kotlin
 - Material Components (Material 3), RecyclerView y Fragments
 - SharedPreferences
+- JUnit 4 para las pruebas unitarias
 
 ## Cómo ejecutarlo
 
-1. **Arranca el backend** siguiendo las instrucciones del [repositorio BarberFlow](https://github.com/Jcgarval/BarberFlow).
+1. **Arranca el backend** siguiendo las instrucciones del [repositorio BarberFlow](https://github.com/Jcgarval/BarberFlow) (con `docker compose up` o con `uvicorn`).
 2. Clona este repositorio y ábrelo con Android Studio:
 
    ```bash
@@ -94,6 +93,16 @@ app/src/main/java/com/example/barberflow/
 5. Para entrar como administrador, crea uno con el script `crear_admin.py` del backend.
 
 > En desarrollo la app usa HTTP (`usesCleartextTraffic`). En un entorno real debería usarse HTTPS.
+
+## Pruebas
+
+Las utilidades de formato (fechas, precios) y las reglas de las citas (estados, próxima cita, cancelación) tienen pruebas unitarias que se ejecutan en el ordenador, sin emulador:
+
+```bash
+./gradlew test        # en Windows: gradlew.bat test
+```
+
+También desde Android Studio: clic derecho sobre `app/src/test` y **Run Tests**.
 
 ## Próximas mejoras
 
