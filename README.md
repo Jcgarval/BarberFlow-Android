@@ -74,7 +74,7 @@ app/src/main/java/com/example/barberflow/
 
 ## Cómo ejecutarlo
 
-1. **Arranca el backend** siguiendo las instrucciones del [repositorio BarberFlow](https://github.com/Jcgarval/BarberFlow) (con `docker compose up` o con `uvicorn`).
+1. **Arranca el backend** siguiendo las instrucciones del [repositorio BarberFlow](https://github.com/Jcgarval/BarberFlow).
 2. Clona este repositorio y ábrelo con Android Studio:
 
    ```bash
