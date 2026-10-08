@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.example.barberflow.R
 import org.json.JSONObject
@@ -134,4 +135,14 @@ fun esCitaProxima(cita: Cita): Boolean {
     val activa = cita.estado == null || cita.estado == EstadoCita.PENDIENTE || cita.estado == EstadoCita.CONFIRMADA
     val ahora = SimpleDateFormat(FORMATO_ISO, Locale.US).format(Date())
     return activa && cita.fecha_hora >= ahora
+}
+
+// ---------- Registro ----------
+/** Id del texto de error si la contraseña incumple las reglas del servidor, o null si es válida. */
+@StringRes
+fun errorDePassword(password: String): Int? = when {
+    password.length < 8 -> R.string.registro_password_corta
+    password.toByteArray(Charsets.UTF_8).size > 72 -> R.string.registro_password_larga
+    !password.any { it.isLetter() } || !password.any { it.isDigit() } -> R.string.registro_password_letra_y_numero
+    else -> null
 }

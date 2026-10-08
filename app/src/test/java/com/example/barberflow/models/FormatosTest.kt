@@ -149,4 +149,18 @@ class FormatosTest {
         assertEquals(R.color.bf_estado_pendiente, EstadoCita.color(null))
         assertEquals(R.color.bf_estado_pendiente, EstadoCita.color("otro"))
     }
+
+    // ------------------------------------------------------------------ contraseña del registro
+    @Test
+    fun errorDePassword_aceptaUnaContrasenaConLetraYNumero() {
+        assertNull(errorDePassword("clave1234"))
+    }
+
+    @Test
+    fun errorDePassword_rechazaLasQueNoCumplenLasReglas() {
+        assertEquals(R.string.registro_password_corta, errorDePassword("abc12"))
+        assertEquals(R.string.registro_password_letra_y_numero, errorDePassword("sololetras"))
+        assertEquals(R.string.registro_password_letra_y_numero, errorDePassword("123456789"))
+        assertEquals(R.string.registro_password_larga, errorDePassword("a1".repeat(40)))
+    }
 }

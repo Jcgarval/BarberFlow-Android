@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import com.example.barberflow.R
 import com.example.barberflow.api.RetrofitClient
 import com.example.barberflow.models.ClienteCreate
+import com.example.barberflow.models.errorDePassword
 import com.example.barberflow.models.mensajeDeError
 import com.google.android.material.appbar.MaterialToolbar
 import retrofit2.HttpException
@@ -45,7 +46,14 @@ class RegistroActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (nombre.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+            // Las mismas reglas que valida el servidor, para avisar antes de enviar nada
+            val errorPassword = errorDePassword(password)
+
+            if (nombre.length > 60) {
+                Toast.makeText(this, R.string.registro_nombre_largo, Toast.LENGTH_SHORT).show()
+            } else if (nombre.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty() && errorPassword != null) {
+                Toast.makeText(this, errorPassword, Toast.LENGTH_SHORT).show()
+            } else if (nombre.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
                 btnRegistrar.isEnabled = false
                 btnRegistrar.text = getString(R.string.registro_creando_cuenta)
 
