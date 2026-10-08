@@ -1,0 +1,38 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pruebas:
+    # Versión fija, igual que en el backend
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"   # el que pide gradle/gradle-daemon-jvm.properties
+
+      - name: Preparar Gradle (con caché)
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Dar permiso de ejecución al wrapper
+        run: chmod +x gradlew
+
+      - name: Ejecutar las pruebas unitarias
+        run: ./gradlew test
+
+      - name: Comprobar que la app compila
+        run: ./gradlew assembleDebug
+
+      - name: Guardar el informe de pruebas si algo falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-pruebas
+          path: app/build/reports/tests/
