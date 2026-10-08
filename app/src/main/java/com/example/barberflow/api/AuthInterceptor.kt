@@ -21,7 +21,7 @@ class AuthInterceptor(context: Context) : Interceptor {
         val respuesta = chain.proceed(requestBuilder.build())
 
         // 401 con un token enviado = sesión caducada o token inválido
-        if (respuesta.code == 401 && token != null) {
+        if (respuesta.code() == 401 && token != null) {
             cerrarSesion()
         }
         return respuesta
