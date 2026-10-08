@@ -31,6 +31,10 @@ class LoginActivity : AppCompatActivity() {
         // 2. Si no hay sesión activa, cargamos la pantalla
         setContentView(R.layout.activity_login)
 
+        if (intent.getBooleanExtra("SESION_CADUCADA", false)) {
+            Toast.makeText(this, R.string.error_sesion_caducada, Toast.LENGTH_LONG).show()
+        }
+
         val inputEmail = findViewById<EditText>(R.id.et_email)
         val inputPassword = findViewById<EditText>(R.id.et_password)
         val btnEntrar = findViewById<Button>(R.id.btn_entrar)

@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/Android-API%2024%2B-3DDC84?logo=android&logoColor=white" alt="Android API 24+">
   <img src="https://img.shields.io/badge/UI-Material%203-1F1F23" alt="Material 3">
   <a href="https://github.com/Jcgarval/BarberFlow"><img src="https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white" alt="Backend FastAPI"></a>
+  <a href="https://github.com/Jcgarval/BarberFlow-Android/actions/workflows/tests.yml"><img src="https://github.com/Jcgarval/BarberFlow-Android/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
 </p>
 
 ## Descripción
@@ -57,6 +58,7 @@ app/src/main/java/com/example/barberflow/
 ### Decisiones técnicas
 - **Una sola actividad principal con navegación inferior** y fragments que se muestran u ocultan, para conservar el estado de cada sección al cambiar de pestaña.
 - **Sesión con JWT:** el token se guarda en `SharedPreferences` y un interceptor de OkHttp lo añade a cada petición.
+- **Sesión caducada:** ese mismo interceptor detecta las respuestas 401, cierra la sesión y devuelve al usuario al login con un aviso, sin tener que comprobarlo en cada pantalla.
 - **Horas libres calculadas en el servidor**, de modo que la app nunca ofrece huecos ocupados y las reglas (horarios, solapes, días de cierre) viven en un único sitio, cubiertas por las pruebas automáticas del backend.
 - **Peticiones asíncronas con corrutinas** (`lifecycleScope`), cancelando la consulta anterior cuando el usuario cambia de opción.
 - **Material 3 con tema claro y oscuro**, colores definidos en el tema (nada de colores fijos en los layouts).
@@ -71,6 +73,7 @@ app/src/main/java/com/example/barberflow/
 - Material Components (Material 3), RecyclerView y Fragments
 - SharedPreferences
 - JUnit 4 para las pruebas unitarias
+- GitHub Actions para la integración continua
 
 ## Cómo ejecutarlo
 
@@ -103,6 +106,8 @@ Las utilidades de formato (fechas, precios) y las reglas de las citas (estados, 
 ```
 
 También desde Android Studio: clic derecho sobre `app/src/test` y **Run Tests**.
+
+Cada `push` y cada pull request ejecutan las pruebas unitarias y comprueban que la app compila mediante GitHub Actions (`.github/workflows/tests.yml`).
 
 ## Próximas mejoras
 
