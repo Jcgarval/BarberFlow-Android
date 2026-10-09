@@ -81,6 +81,22 @@
             app:cornerRadius="14dp"
             app:strokeColor="?attr/colorError" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_perfil_privacidad"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/perfil_politica_privacidad" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_perfil_eliminar_cuenta"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/perfil_eliminar_cuenta"
+            android:textColor="?attr/colorError" />
+
         <TextView
             android:id="@+id/tv_perfil_version"
             android:layout_width="wrap_content"

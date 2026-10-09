@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -20,6 +21,10 @@ interface BarberiaApi {
 
     @POST("/login")
     suspend fun login(@Body credenciales: LoginRequest): LoginResponse
+
+    // DELETE con cuerpo (la contraseña): Retrofit lo exige con @HTTP(hasBody = true)
+    @HTTP(method = "DELETE", path = "/clientes/me", hasBody = true)
+    suspend fun eliminarMiCuenta(@Body datos: EliminarCuentaRequest): Response<MensajeResponse>
 
     @GET("/citas/")
     suspend fun obtenerCitas(@Query("cliente_id") clienteId: Int): List<Cita>

@@ -4,6 +4,9 @@ package com.example.barberflow.models
 data class ClienteCreate(val nombre: String, val email: String, val password: String)
 data class ClienteResponse(val id: Int, val nombre: String, val email: String, val rol: String)
 
+// Borrado de la cuenta (DELETE /clientes/me): se envía la contraseña para confirmar
+data class EliminarCuentaRequest(val password: String)
+
 // Barberos
 data class BarberoCreate(val nombre: String)
 data class BarberoResponse(val id: Int, val nombre: String)

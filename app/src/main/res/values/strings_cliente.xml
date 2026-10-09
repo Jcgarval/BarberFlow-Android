@@ -64,4 +64,13 @@
     <string name="perfil_cerrar_sesion">Cerrar sesión</string>
     <string name="perfil_sesion_cerrada">Sesión cerrada</string>
     <string name="perfil_version">BarberFlow · versión %1$s</string>
+    <string name="perfil_politica_privacidad">Política de privacidad</string>
+    <string name="perfil_url_privacidad" translatable="false">https://jcgarval.github.io/BarberFlow/privacidad.html</string>
+    <string name="perfil_sin_navegador">No hay ninguna aplicación para abrir el enlace</string>
+    <string name="perfil_eliminar_cuenta">Eliminar cuenta</string>
+    <string name="perfil_eliminar_titulo">Eliminar cuenta</string>
+    <string name="perfil_eliminar_mensaje">Se borrarán tu nombre, tu correo y tu contraseña, y se cancelarán tus citas futuras. El historial de citas pasadas se conserva sin ningún dato que te identifique. Esta acción no se puede deshacer.\n\nEscribe tu contraseña para confirmar.</string>
+    <string name="perfil_eliminar_confirmar">Eliminar</string>
+    <string name="perfil_eliminar_escribe_password">Escribe tu contraseña</string>
+    <string name="perfil_cuenta_eliminada">Tu cuenta se ha eliminado</string>
 </resources>
