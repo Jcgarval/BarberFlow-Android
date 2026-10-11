@@ -17,6 +17,7 @@ import com.example.barberflow.models.EstadoCita
 import com.example.barberflow.models.EstadoUpdate
 import com.example.barberflow.models.formatearFechaHora
 import com.example.barberflow.models.mensajeDeError
+import com.example.barberflow.notificaciones.RecordatoriosCitas
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -60,6 +61,9 @@ class CitasFragment : Fragment(R.layout.fragment_citas) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val citas = api.obtenerCitas(idCliente)
+
+                // Tras cancelar (o si cambió algo en el servidor), los recordatorios se ajustan solos
+                context?.let { RecordatoriosCitas.sincronizar(it, citas) }
 
                 // Primero las próximas (la más cercana arriba); después el resto, de más reciente a más antigua
                 val (activas, resto) = citas.partition {

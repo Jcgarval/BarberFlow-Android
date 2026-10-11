@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Recordatorios de cita (notificaciones locales) -->
+    <string name="recordatorio_canal_nombre">Recordatorios de cita</string>
+    <string name="recordatorio_canal_descripcion">Avisos antes de tus citas en la barbería</string>
+    <string name="recordatorio_titulo">Tu cita en BarberFlow</string>
+    <string name="recordatorio_texto_24h">Mañana a las %1$s: %2$s con %3$s.</string>
+    <string name="recordatorio_texto_1h">Dentro de una hora, a las %1$s: %2$s con %3$s.</string>
+</resources>

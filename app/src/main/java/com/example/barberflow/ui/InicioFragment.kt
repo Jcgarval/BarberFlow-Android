@@ -1,10 +1,15 @@
 package com.example.barberflow.ui
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.barberflow.R
@@ -15,6 +20,7 @@ import com.example.barberflow.models.diasHasta
 import com.example.barberflow.models.esCitaProxima
 import com.example.barberflow.models.formatearDiaLargo
 import com.example.barberflow.models.formatearHora
+import com.example.barberflow.notificaciones.RecordatoriosCitas
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -30,6 +36,10 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
     private lateinit var textoError: TextView
     private lateinit var tarjetaProxima: MaterialCardView
     private lateinit var tarjetaSinCita: MaterialCardView
+
+    // Android 13+: permiso para mostrar los recordatorios. Si se deniega, la app sigue funcionando igual.
+    private val pedirPermisoNotificaciones =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -75,6 +85,10 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
         jobCarga = viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val citas = api.obtenerCitas(idCliente)
+
+                // Deja programados los recordatorios que corresponden a las citas actuales
+                RecordatoriosCitas.sincronizar(requireContext(), citas)
+
                 val proxima = citas.filter { esCitaProxima(it) }.minByOrNull { it.fecha_hora }
 
                 progreso.visibility = View.GONE
@@ -84,6 +98,7 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                 } else {
                     tarjetaSinCita.visibility = View.GONE
                     mostrarProxima(proxima)
+                    pedirPermisoDeNotificacionesSiHaceFalta()
                 }
             } catch (e: CancellationException) {
                 throw e
@@ -92,6 +107,18 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                 textoError.visibility = View.VISIBLE
             }
         }
+    }
+
+    /** Se pide una sola vez, cuando ya hay una cita de la que avisar (así el usuario entiende para qué es). */
+    private fun pedirPermisoDeNotificacionesSiHaceFalta() {
+        if (Build.VERSION.SDK_INT < 33 || !isAdded || isHidden) return
+        val contexto = requireContext()
+        if (ContextCompat.checkSelfPermission(contexto, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) return
+
+        val preferencias = contexto.getSharedPreferences("BarberFlowPrefs", Context.MODE_PRIVATE)
+        if (preferencias.getBoolean("PIDIO_NOTIFICACIONES", false)) return
+        preferencias.edit().putBoolean("PIDIO_NOTIFICACIONES", true).apply()
+        pedirPermisoNotificaciones.launch(Manifest.permission.POST_NOTIFICATIONS)
     }
 
     private fun mostrarProxima(cita: Cita) {
