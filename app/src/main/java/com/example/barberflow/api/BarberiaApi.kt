@@ -22,6 +22,14 @@ interface BarberiaApi {
     @POST("/login")
     suspend fun login(@Body credenciales: LoginRequest): LoginResponse
 
+    // --- Recuperar contraseña (sin sesión) ---
+    // Siempre responde 200 con el mismo mensaje, exista o no la cuenta
+    @POST("/auth/olvide-password")
+    suspend fun olvidePassword(@Body datos: SolicitudRecuperacion): Response<MensajeResponse>
+
+    @POST("/auth/restablecer-password")
+    suspend fun restablecerPassword(@Body datos: RestablecerPasswordRequest): Response<MensajeResponse>
+
     // DELETE con cuerpo (la contraseña): Retrofit lo exige con @HTTP(hasBody = true)
     @HTTP(method = "DELETE", path = "/clientes/me", hasBody = true)
     suspend fun eliminarMiCuenta(@Body datos: EliminarCuentaRequest): Response<MensajeResponse>

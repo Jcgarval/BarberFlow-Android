@@ -7,6 +7,10 @@ data class ClienteResponse(val id: Int, val nombre: String, val email: String, v
 // Borrado de la cuenta (DELETE /clientes/me): se envía la contraseña para confirmar
 data class EliminarCuentaRequest(val password: String)
 
+// Recuperar contraseña: POST /auth/olvide-password y POST /auth/restablecer-password
+data class SolicitudRecuperacion(val email: String)
+data class RestablecerPasswordRequest(val email: String, val codigo: String, val nueva_password: String)
+
 // Barberos
 data class BarberoCreate(val nombre: String)
 data class BarberoResponse(val id: Int, val nombre: String)

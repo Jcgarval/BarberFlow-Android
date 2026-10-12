@@ -84,6 +84,13 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegistroActivity::class.java)
             startActivity(intent)
         }
+
+        // "¿Olvidaste tu contraseña?": abre la recuperación y le pasa el correo si ya estaba escrito
+        findViewById<Button>(R.id.btn_olvide_password).setOnClickListener {
+            val pantalla = Intent(this, RecuperarPasswordActivity::class.java)
+            pantalla.putExtra(RecuperarPasswordActivity.EXTRA_EMAIL, inputEmail.text.toString().trim())
+            startActivity(pantalla)
+        }
     }
 
     private fun redirigirSegunRol(rol: String) {

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Botón en el login -->
+    <string name="login_olvide_password">¿Olvidaste tu contraseña?</string>
+
+    <!-- Pantalla 1: pedir el código -->
+    <string name="recuperar_titulo">Recupera tu contraseña</string>
+    <string name="recuperar_subtitulo">Escribe el correo de tu cuenta y te enviaremos un código de 6 dígitos.</string>
+    <string name="recuperar_enviar_codigo">Enviar código</string>
+    <string name="recuperar_enviando">Enviando...</string>
+    <string name="recuperar_escribe_tu_correo">Escribe tu correo electrónico</string>
+    <string name="recuperar_correo_no_valido">Correo no válido</string>
+
+    <!-- Pantalla 2: escribir el código y la contraseña nueva -->
+    <string name="restablecer_titulo">Escribe el código</string>
+    <string name="restablecer_info">Si %1$s está registrado, te hemos enviado un código de 6 dígitos. Caduca en 15 minutos. Si no lo ves, mira en la carpeta de spam.</string>
+    <string name="restablecer_codigo">Código de 6 dígitos</string>
+    <string name="restablecer_nueva_password">Nueva contraseña</string>
+    <string name="restablecer_repetir_password">Repite la contraseña</string>
+    <string name="restablecer_cambiar">Cambiar contraseña</string>
+    <string name="restablecer_cambiando">Cambiando...</string>
+    <string name="restablecer_reenviar">Reenviar código</string>
+    <string name="restablecer_reenviar_espera">Reenviar código (%1$d s)</string>
+    <string name="restablecer_codigo_reenviado">Si el correo está registrado, te hemos enviado un código nuevo</string>
+    <string name="restablecer_error_codigo">El código tiene 6 dígitos</string>
+    <string name="restablecer_error_corta">Mínimo 8 caracteres</string>
+    <string name="restablecer_error_larga">Demasiado larga (máximo 72 bytes)</string>
+    <string name="restablecer_error_letra_numero">Debe incluir al menos una letra y un número</string>
+    <string name="restablecer_error_no_coinciden">Las contraseñas no coinciden</string>
+    <string name="restablecer_ok">Contraseña actualizada. Ya puedes iniciar sesión.</string>
+</resources>
